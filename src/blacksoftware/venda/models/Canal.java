@@ -21,4 +21,9 @@ public class Canal extends RushObject {
 		this.nome = nome;
 	}
 
+	@Override
+	public String toString() {
+		return nome;
+	}
+
 }

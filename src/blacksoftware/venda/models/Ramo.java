@@ -21,4 +21,10 @@ public class Ramo extends RushObject {
 		this.nome = nome;
 	}
 
+	@Override
+	public String toString() {
+		return nome;
+	}
+
+	
 }

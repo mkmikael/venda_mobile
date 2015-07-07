@@ -13,12 +13,12 @@ public class BootStrap extends Application {
 	public void onCreate() {
 		super.onCreate();
 		RushAndroid.initialize(getApplicationContext());
-		Ramo ramo = new Ramo("Ramo");
-		ramo.save();
-		Canal canal = new Canal("Canal");
-		canal.save();
-		Cliente cliente = new Cliente("123123123", "MAGNUS CLUB SHOW", "razionado", "Rua Laurival Cunha 382", "1231233", Situacao.EM_DIA, 5f, 1000.0d, "98888-4444", "Mikael Lima", canal, ramo);
-		cliente.save();
+//		Ramo ramo = new Ramo("Ramo");
+//		ramo.save();
+//		Canal canal = new Canal("Canal");
+//		canal.save();
+//		Cliente cliente = new Cliente("123123123", "MAGNUS CLUB SHOW", "razionado", "Rua Laurival Cunha 382", "1231233", Situacao.EM_DIA, 5f, 1000.0d, "98888-4444", "Mikael Lima", canal, ramo);
+//		cliente.save();
 	}
 
 	@Override

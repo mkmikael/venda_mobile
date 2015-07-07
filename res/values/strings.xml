@@ -8,6 +8,6 @@
     <string name="title_activity_form_aluno">FormAluno</string>
     <string name="title_activity_mostrar_aluno">MostrarAluno</string>
     <string name="title_activity_main">Venda</string>
-    <string name="title_activity_cliente">ClienteActivity</string>
+    <string name="title_activity_cliente">Clientes</string>
 
 </resources>
