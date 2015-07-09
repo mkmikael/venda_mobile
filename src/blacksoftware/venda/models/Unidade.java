@@ -1,5 +1,5 @@
 package blacksoftware.venda.models;
 
-public class Unidade {
-
+public enum Unidade {
+	CAIXA, UNITARIO
 }

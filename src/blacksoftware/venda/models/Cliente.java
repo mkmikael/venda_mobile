@@ -1,33 +1,43 @@
 package blacksoftware.venda.models;
 
 import co.uk.rushorm.core.RushObject;
+import co.uk.rushorm.core.annotations.RushCustomTableName;
 
+@RushCustomTableName(name = "cliente")
 public class Cliente extends RushObject {
 
+	private String codigo;
 	private String cnpj;
 	private String nomeFantasia;
 	private String razaoSocial;
 	private String endereco;
+	private String bairro;
+	private String referencia;
+	private String cidade;
 	private String inscricaoEstadual;
 	private Situacao situacao = Situacao.EM_DIA;
 	private float rate;
 	private double limite;
 	private String telefone;
 	private String responsavel;
-	private Canal canal;
-	private Ramo ramo;
+	private String canal;
+	private String ramo;
 
 	public Cliente() {
 	}
 
-	public Cliente(String cnpj, String nomeFantasia, String razaoSocial,
-			String endereco, String inscricaoEstadual, Situacao situacao,
-			float rate, double limite, String telefone, String responsavel,
-			Canal canal, Ramo ramo) {
+	public Cliente(String codigo, String cnpj, String nomeFantasia, String razaoSocial,
+			String endereco, String bairro, String referencia, String cidade, String inscricaoEstadual, 
+			Situacao situacao, float rate, double limite, String telefone, String responsavel,
+			String canal, String ramo) {
+		this.codigo = codigo;
 		this.cnpj = cnpj;
 		this.nomeFantasia = nomeFantasia;
 		this.razaoSocial = razaoSocial;
 		this.endereco = endereco;
+		this.bairro = bairro;
+		this.referencia = referencia;
+		this.cidade = cidade;
 		this.inscricaoEstadual = inscricaoEstadual;
 		this.situacao = situacao;
 		this.rate = rate;
@@ -36,6 +46,14 @@ public class Cliente extends RushObject {
 		this.responsavel = responsavel;
 		this.canal = canal;
 		this.ramo = ramo;
+	}
+	
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 	
 	public String getCnpj() {
@@ -68,6 +86,30 @@ public class Cliente extends RushObject {
 
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
 	}
 
 	public String getInscricaoEstadual() {
@@ -118,19 +160,19 @@ public class Cliente extends RushObject {
 		this.responsavel = responsavel;
 	}
 
-	public Canal getCanal() {
+	public String getCanal() {
 		return canal;
 	}
 
-	public void setCanal(Canal canal) {
+	public void setCanal(String canal) {
 		this.canal = canal;
 	}
 
-	public Ramo getRamo() {
+	public String getRamo() {
 		return ramo;
 	}
 
-	public void setRamo(Ramo ramo) {
+	public void setRamo(String ramo) {
 		this.ramo = ramo;
 	}
 

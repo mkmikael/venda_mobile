@@ -1,27 +1,27 @@
 package blacksoftware.venda.activities;
 
+import blacksoftware.venda.R;
+import blacksoftware.venda.R.id;
+import blacksoftware.venda.R.layout;
+import blacksoftware.venda.R.menu;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import blacksoftware.venda.R;
-import blacksoftware.venda.config.Fixtures;
 
-public class MainActivity extends Activity {
+public class PedidoActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Fixtures.execute();
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_pedido);
+		System.out.println(getIntent().getExtras().get("cliente"));
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.pedido, menu);
 		return true;
 	}
 
@@ -36,11 +36,4 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	public void irParaClientes(View view) {
-		Intent intent = new Intent(this, ClienteActivity.class);
-		startActivity(intent);
-	}
-	
-	
 }
