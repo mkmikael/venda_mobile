@@ -1,4 +1,4 @@
-package blacksoftware.venda.models;
+package blacksoftware.venda.models.enums;
 
 public enum Unidade {
 	CAIXA, UNITARIO

@@ -1,30 +1,48 @@
 package blacksoftware.venda.models;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
-import co.uk.rushorm.core.RushObject;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-public class Pedido extends RushObject {
+@DatabaseTable(tableName="pedido")
+public class Pedido implements Serializable {
 
+	private static final long serialVersionUID = -925355088132929355L;
+	@DatabaseField(generatedId=true)
+	private int id;
+	@DatabaseField(columnName="codigo")
 	private String codigo;
-	private String codigoCliente;
+	@DatabaseField(columnName="cliente_id", foreign=true, foreignAutoRefresh=true)
+	private Cliente cliente;
+	@DatabaseField(columnName="data_criacao", dataType=DataType.DATE)
 	private Date dataCriacao;
+	@DatabaseField(columnName="data_de_faturamento", dataType=DataType.DATE)
 	private Date dataDeFaturamento;
-	private double total;
+	@DatabaseField(columnName="total",dataType=DataType.BIG_DECIMAL)
+	private BigDecimal total;
 	
 	public Pedido() {
 	}	
 
-	public Pedido(String codigo, String codigoCliente, Date dataCriacao,
-			Date dataDeFaturamento, double total) {
+	public Pedido(int id, String codigo, Cliente cliente, Date dataCriacao,
+			Date dataDeFaturamento, BigDecimal total) {
 		super();
+		this.id = id;
 		this.codigo = codigo;
-		this.codigoCliente = codigoCliente;
+		this.cliente = cliente;
 		this.dataCriacao = dataCriacao;
 		this.dataDeFaturamento = dataDeFaturamento;
 		this.total = total;
 	}
 
+	public int getId() {
+		return id;
+	}
+	
 	public String getCodigo() {
 		return codigo;
 	}
@@ -33,12 +51,12 @@ public class Pedido extends RushObject {
 		this.codigo = codigo;
 	}
 
-	public String getCodigoCliente() {
-		return codigoCliente;
+	public Cliente getCliente() {
+		return cliente;
 	}
 
-	public void setCodigoCliente(String codigoCliente) {
-		this.codigoCliente = codigoCliente;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public Date getDataCriacao() {
@@ -57,11 +75,11 @@ public class Pedido extends RushObject {
 		this.dataDeFaturamento = dataDeFaturamento;
 	}
 
-	public double getTotal() {
+	public BigDecimal getTotal() {
 		return total;
 	}
 
-	public void setTotal(double total) {
+	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
 

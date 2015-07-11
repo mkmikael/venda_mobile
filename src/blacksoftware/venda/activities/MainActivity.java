@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import blacksoftware.venda.R;
+import blacksoftware.venda.config.Database;
 import blacksoftware.venda.config.Fixtures;
 
 public class MainActivity extends Activity {
@@ -14,7 +15,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Fixtures.execute();
 		setContentView(R.layout.activity_main);
 	}
 

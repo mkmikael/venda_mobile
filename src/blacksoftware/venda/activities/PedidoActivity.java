@@ -1,13 +1,10 @@
 package blacksoftware.venda.activities;
 
-import blacksoftware.venda.R;
-import blacksoftware.venda.R.id;
-import blacksoftware.venda.R.layout;
-import blacksoftware.venda.R.menu;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import blacksoftware.venda.R;
 
 public class PedidoActivity extends Activity {
 
@@ -20,7 +17,6 @@ public class PedidoActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.pedido, menu);
 		return true;
 	}
@@ -36,4 +32,5 @@ public class PedidoActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 }

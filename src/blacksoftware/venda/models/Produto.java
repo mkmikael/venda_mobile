@@ -1,28 +1,45 @@
 package blacksoftware.venda.models;
 
-import co.uk.rushorm.core.RushObject;
-import co.uk.rushorm.core.annotations.RushCustomTableName;
-import co.uk.rushorm.core.annotations.RushIgnore;
+import java.io.Serializable;
+import java.math.BigDecimal;
 
-@RushCustomTableName(name = "produto")
-public class Produto extends RushObject {
-	
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName="produto")
+public class Produto implements Serializable {
+
+	private static final long serialVersionUID = -6654002649371591056L;
+	@DatabaseField(generatedId=true)
+	private int id;
+	@DatabaseField(columnName="codigo")
 	private String codigo;
+	@DatabaseField(columnName="nome")
 	private String nome;
+	@DatabaseField(columnName="fornecedor")
 	private String fornecedor;
+	@DatabaseField(columnName="grupo")
 	private String grupo;
-	private double estoque;
-	private double preco;
+	@DatabaseField(columnName="embalagem")
 	private String embalagem;
-	@RushIgnore
-	private boolean vendido = false;
-	
+	@DatabaseField(columnName="estoque", dataType=DataType.BIG_DECIMAL)
+	private BigDecimal estoque;
+	@DatabaseField(columnName="preco", dataType=DataType.BIG_DECIMAL)
+	private BigDecimal preco;
+	@DatabaseField(columnName="preco_minimo", dataType=DataType.BIG_DECIMAL)
+	private BigDecimal precoMinimo;
+	@DatabaseField(columnName="bonificacao", dataType=DataType.BIG_DECIMAL)
+	private BigDecimal bonificacao;
+	private transient boolean vendido = false;
+
 	public Produto() {
 	}
-	
-	public Produto(String codigo, String nome, String fornecedor, String grupo,
-			double estoque, double preco, String embalagem) {
+
+	public Produto(int id, String codigo, String nome, String fornecedor,
+			String grupo, BigDecimal estoque, BigDecimal preco, String embalagem) {
 		super();
+		this.id = id;
 		this.codigo = codigo;
 		this.nome = nome;
 		this.fornecedor = fornecedor;
@@ -32,9 +49,11 @@ public class Produto extends RushObject {
 		this.embalagem = embalagem;
 	}
 
-	public Produto(String codigo, String nome, String fornecedor, String grupo,
-			double estoque, double preco, String embalagem, boolean vendido) {
+	public Produto(int id, String codigo, String nome, String fornecedor,
+			String grupo, BigDecimal estoque, BigDecimal preco, String embalagem,
+			boolean vendido) {
 		super();
+		this.id = id;
 		this.codigo = codigo;
 		this.nome = nome;
 		this.fornecedor = fornecedor;
@@ -43,57 +62,92 @@ public class Produto extends RushObject {
 		this.preco = preco;
 		this.embalagem = embalagem;
 		this.vendido = vendido;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getCodigo() {
 		return codigo;
 	}
+
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
+
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	public String getFornecedor() {
 		return fornecedor;
 	}
+
 	public void setFornecedor(String fornecedor) {
 		this.fornecedor = fornecedor;
 	}
+
 	public String getGrupo() {
 		return grupo;
 	}
+
 	public void setGrupo(String grupo) {
 		this.grupo = grupo;
 	}
-	public double getEstoque() {
+
+	public BigDecimal getEstoque() {
 		return estoque;
 	}
-	public void setEstoque(double estoque) {
+
+	public void setEstoque(BigDecimal estoque) {
 		this.estoque = estoque;
 	}
-	public double getPreco() {
+
+	public BigDecimal getPreco() {
 		return preco;
 	}
-	public void setPreco(double preco) {
+
+	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
 	}
+
+	public BigDecimal getPrecoMinimo() {
+		return precoMinimo;
+	}
+
+	public void setPrecoMinimo(BigDecimal precoMinimo) {
+		this.precoMinimo = precoMinimo;
+	}
+
+	public BigDecimal getBonificacao() {
+		return bonificacao;
+	}
+
+	public void setBonificacao(BigDecimal bonificacao) {
+		this.bonificacao = bonificacao;
+	}
+
 	public String getEmbalagem() {
 		return embalagem;
 	}
+
 	public void setEmbalagem(String embalagem) {
 		this.embalagem = embalagem;
 	}
+
 	public boolean isVendido() {
 		return vendido;
 	}
+
 	public void setVendido(boolean vendido) {
 		this.vendido = vendido;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

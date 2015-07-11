@@ -1,35 +1,66 @@
 package blacksoftware.venda.models;
 
-import co.uk.rushorm.core.RushObject;
-import co.uk.rushorm.core.annotations.RushCustomTableName;
+import java.io.Serializable;
+import java.math.BigDecimal;
 
-@RushCustomTableName(name = "cliente")
-public class Cliente extends RushObject {
+import blacksoftware.venda.models.enums.Situacao;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "cliente")
+public class Cliente implements Serializable {
+
+	private static final long serialVersionUID = -4433715046586611341L;
+	
+	@DatabaseField(generatedId=true)
+	private int id;
+	@DatabaseField(columnName="codigo")
 	private String codigo;
+	@DatabaseField(columnName="cnpj")
 	private String cnpj;
+	@DatabaseField(columnName="nome_fantasia")
 	private String nomeFantasia;
+	@DatabaseField(columnName="razao_social")
 	private String razaoSocial;
+	@DatabaseField(columnName="endereco")
 	private String endereco;
+	@DatabaseField(columnName="bairro")
 	private String bairro;
+	@DatabaseField(columnName="referencia")
 	private String referencia;
+	@DatabaseField(columnName="cidade")
 	private String cidade;
+	@DatabaseField(columnName="inscricao_estadual")
 	private String inscricaoEstadual;
+	@DatabaseField(dataType=DataType.ENUM_INTEGER)
 	private Situacao situacao = Situacao.EM_DIA;
+	@DatabaseField(columnName="rate")
 	private float rate;
-	private double limite;
+	@DatabaseField(columnName="limite", dataType=DataType.BIG_DECIMAL)
+	private BigDecimal limite;
+	@DatabaseField(columnName="telefone")
 	private String telefone;
+	@DatabaseField(columnName="responsavel")
 	private String responsavel;
+	@DatabaseField(columnName="canal")
 	private String canal;
+	@DatabaseField(columnName="ramo")
 	private String ramo;
 
 	public Cliente() {
 	}
 
-	public Cliente(String codigo, String cnpj, String nomeFantasia, String razaoSocial,
+	public Cliente(int id) {
+		this.id = id;
+	}
+	
+	public Cliente(int id, String codigo, String cnpj, String nomeFantasia, String razaoSocial,
 			String endereco, String bairro, String referencia, String cidade, String inscricaoEstadual, 
-			Situacao situacao, float rate, double limite, String telefone, String responsavel,
+			Situacao situacao, float rate, BigDecimal limite, String telefone, String responsavel,
 			String canal, String ramo) {
+		this.id = id;
 		this.codigo = codigo;
 		this.cnpj = cnpj;
 		this.nomeFantasia = nomeFantasia;
@@ -46,6 +77,10 @@ public class Cliente extends RushObject {
 		this.responsavel = responsavel;
 		this.canal = canal;
 		this.ramo = ramo;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public String getCodigo() {
@@ -136,11 +171,11 @@ public class Cliente extends RushObject {
 		this.rate = rate;
 	}
 
-	public double getLimite() {
+	public BigDecimal getLimite() {
 		return limite;
 	}
 
-	public void setLimite(double limite) {
+	public void setLimite(BigDecimal limite) {
 		this.limite = limite;
 	}
 
@@ -214,6 +249,4 @@ public class Cliente extends RushObject {
 			return false;
 		return true;
 	}
-
-	
 }
