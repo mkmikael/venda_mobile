@@ -29,15 +29,13 @@ public class Produto implements Serializable {
 	private BigDecimal preco;
 	@DatabaseField(columnName="preco_minimo", dataType=DataType.BIG_DECIMAL)
 	private BigDecimal precoMinimo;
-	@DatabaseField(columnName="bonificacao", dataType=DataType.BIG_DECIMAL)
-	private BigDecimal bonificacao;
 	private transient boolean vendido = false;
 
 	public Produto() {
 	}
 
 	public Produto(int id, String codigo, String nome, String fornecedor,
-			String grupo, BigDecimal estoque, BigDecimal preco, String embalagem) {
+			String grupo, BigDecimal estoque, BigDecimal preco, BigDecimal precoMinimo, String embalagem) {
 		super();
 		this.id = id;
 		this.codigo = codigo;
@@ -46,11 +44,12 @@ public class Produto implements Serializable {
 		this.grupo = grupo;
 		this.estoque = estoque;
 		this.preco = preco;
+		this.precoMinimo = precoMinimo;
 		this.embalagem = embalagem;
 	}
 
 	public Produto(int id, String codigo, String nome, String fornecedor,
-			String grupo, BigDecimal estoque, BigDecimal preco, String embalagem,
+			String grupo, BigDecimal estoque, BigDecimal preco, BigDecimal precoMinimo, String embalagem,
 			boolean vendido) {
 		super();
 		this.id = id;
@@ -60,6 +59,7 @@ public class Produto implements Serializable {
 		this.grupo = grupo;
 		this.estoque = estoque;
 		this.preco = preco;
+		this.precoMinimo = precoMinimo;
 		this.embalagem = embalagem;
 		this.vendido = vendido;
 	}
@@ -112,24 +112,8 @@ public class Produto implements Serializable {
 		return preco;
 	}
 
-	public void setPreco(BigDecimal preco) {
-		this.preco = preco;
-	}
-
 	public BigDecimal getPrecoMinimo() {
 		return precoMinimo;
-	}
-
-	public void setPrecoMinimo(BigDecimal precoMinimo) {
-		this.precoMinimo = precoMinimo;
-	}
-
-	public BigDecimal getBonificacao() {
-		return bonificacao;
-	}
-
-	public void setBonificacao(BigDecimal bonificacao) {
-		this.bonificacao = bonificacao;
 	}
 
 	public String getEmbalagem() {

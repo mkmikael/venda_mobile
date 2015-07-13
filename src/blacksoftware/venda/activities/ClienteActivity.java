@@ -1,5 +1,6 @@
 package blacksoftware.venda.activities;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import blacksoftware.venda.R;
+import blacksoftware.venda.config.DatabaseOrm;
 import blacksoftware.venda.models.Cliente;
 
 public class ClienteActivity extends Activity {
@@ -31,6 +33,7 @@ public class ClienteActivity extends Activity {
 	private ListView clientes;
 	private SparseArray<TextView> clienteDescricao;
 	private RatingBar rate;
+	private DatabaseOrm db = new DatabaseOrm(this);
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,18 @@ public class ClienteActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		List<Cliente> lista = null;
+		try {
+			lista = db.getClienteDao().queryForAll();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		formHelper.setClientesView(this, lista, clientes);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		db.close();
 	}
 
 	@Override
@@ -88,7 +102,7 @@ public class ClienteActivity extends Activity {
 	};
 	
 	private OnItemLongClickListener itemLongSelectedListener = new OnItemLongClickListener() {
-
+		
 		@Override
 		public boolean onItemLongClick(AdapterView<?> adapter, View view,
 				int position, long id) {
@@ -105,9 +119,8 @@ public class ClienteActivity extends Activity {
 						startActivity(intent);
 					}
 				}
-			})
-			.show();
-			return false;
+			}).show();
+			return true;
 		}
 	};
 }

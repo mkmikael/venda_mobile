@@ -7,8 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import blacksoftware.venda.R;
-import blacksoftware.venda.config.Database;
-import blacksoftware.venda.config.Fixtures;
 
 public class MainActivity extends Activity {
 

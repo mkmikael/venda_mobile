@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="pedido")
@@ -24,6 +26,8 @@ public class Pedido implements Serializable {
 	private Date dataDeFaturamento;
 	@DatabaseField(columnName="total",dataType=DataType.BIG_DECIMAL)
 	private BigDecimal total;
+	@ForeignCollectionField(eager=true, foreignFieldName="pedido", maxEagerLevel=2)
+	private ForeignCollection<ItemPedido> itensPedido;
 	
 	public Pedido() {
 	}	
@@ -75,12 +79,16 @@ public class Pedido implements Serializable {
 		this.dataDeFaturamento = dataDeFaturamento;
 	}
 
-	public BigDecimal getTotal() {
-		return total;
+	public ForeignCollection<ItemPedido> getItensPedido() {
+		return itensPedido;
 	}
 
-	public void setTotal(BigDecimal total) {
-		this.total = total;
+	public BigDecimal getTotal() {
+		BigDecimal sum = BigDecimal.ZERO;
+		for (ItemPedido itemPedido : getItensPedido())
+			sum = sum.add(itemPedido.getTotal());
+		total = sum;
+		return total;
 	}
 
 	@Override

@@ -10,5 +10,4 @@
     <string name="title_activity_main">Venda</string>
     <string name="title_activity_cliente">Clientes</string>
     <string name="title_activity_pedido">PedidoActivity</string>
-
 </resources>

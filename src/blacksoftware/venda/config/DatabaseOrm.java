@@ -53,6 +53,10 @@ public class DatabaseOrm extends OrmLiteSqliteOpenHelper {
 		return clienteDao;
 	}
 	
+	public <T>Dao<T,Integer> getGenericDao(Class<T> clazz) throws SQLException {
+		return getDao(clazz);
+	}
+	
 	public Dao<Produto,Integer> getProdutoDao() throws SQLException {
 		if (produtoDao == null) {
 			produtoDao = getDao(Produto.class);

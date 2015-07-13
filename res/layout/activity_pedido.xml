@@ -9,6 +9,39 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="blacksoftware.venda.activities.PedidoActivity" >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnCalendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="24dp"
+            android:layout_toRightOf="@+id/textView1"
+            android:text="Button" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Faturar" />
+
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/btnCalendar"
+            android:layout_alignBottom="@+id/btnCalendar"
+            android:layout_alignParentRight="true"
+            android:text="0,00"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/itens"
         android:layout_width="match_parent"
