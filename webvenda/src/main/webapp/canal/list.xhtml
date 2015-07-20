@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/layout/main.xhtml">
+	<ui:define name="content">
+		<p:panel header="Listagem de Canal">
+			<p>
+				<p:button value="Criar Canal" outcome="/canal/form.xhtml" />
+			</p>
+			<p:dataTable id="canalList" value="#{canalBean.canais}" var="canal"
+				emptyMessage="Sem registros.">
+				<p:column headerText="Código">
+					<h:outputText value="#{canal.codigo}" />
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText value="#{canal.nome}" />
+				</p:column>
+				<p:column headerText="Editar" width="85">
+					<p:commandButton icon="ui-icon-pencil" action="/canal/form.xhtml">
+						<f:setPropertyActionListener value="#{canal}"
+							target="#{canalBean.canal}" />
+					</p:commandButton>
+				</p:column>
+				<p:column headerText="Deletar" width="85">
+					<p:commandButton icon="ui-icon-trash" action="#{canalBean.deletar}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Venda App</title>
+</h:head>
+<h:body>
+	<p:layout>
+		<p:layoutUnit position="west" size="250" style="border: none">
+			<p:menu>
+				<p:menuitem value="Home" icon="ui-icon-home" outcome="/home.xhtml"/>
+				<p:menuitem value="Sair" icon="ui-icon-power" outcome="/index.xhtml"/>
+				<p:submenu label="Operações">
+					<p:menuitem value="Pedidos" outcome="/home.xhtml"/>
+					<p:menuitem value="Cobranças" outcome="/home.xhtml"/>
+				</p:submenu>
+				<p:submenu label="Cadastros">
+					<p:menuitem value="Ramos" outcome="/ramo/list.xhtml"/>
+					<p:menuitem value="Canais" outcome="/canal/list.xhtml"/>
+					<p:menuitem value="Grupos" outcome="/home.xhtml"/>
+					<p:menuitem value="Fornecedores" outcome="/home.xhtml"/>
+					<p:menuitem value="Clientes" outcome="/home.xhtml"/>
+					<p:menuitem value="Produtos" outcome="/home.xhtml"/>
+				</p:submenu>
+			</p:menu>
+    	</p:layoutUnit>
+    	
+		<p:layoutUnit position="center">
+			<ui:insert name="content"/>
+    	</p:layoutUnit>
+	</p:layout>
+</h:body>
+</html>
