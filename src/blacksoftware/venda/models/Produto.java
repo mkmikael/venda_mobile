@@ -1,11 +1,15 @@
 package blacksoftware.venda.models;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import blacksoftware.venda.models.enums.TipoUnidade;
 
 @DatabaseTable(tableName="produto")
 public class Produto implements Serializable {
@@ -13,55 +17,29 @@ public class Produto implements Serializable {
 	private static final long serialVersionUID = -6654002649371591056L;
 	@DatabaseField(generatedId=true)
 	private int id;
-	@DatabaseField(columnName="codigo")
+	@DatabaseField
 	private String codigo;
-	@DatabaseField(columnName="nome")
+	@DatabaseField
 	private String nome;
-	@DatabaseField(columnName="fornecedor")
-	private String fornecedor;
-	@DatabaseField(columnName="grupo")
-	private String grupo;
-	@DatabaseField(columnName="embalagem")
-	private String embalagem;
-	@DatabaseField(columnName="estoque", dataType=DataType.BIG_DECIMAL)
-	private BigDecimal estoque;
-	@DatabaseField(columnName="preco", dataType=DataType.BIG_DECIMAL)
-	private BigDecimal preco;
-	@DatabaseField(columnName="preco_minimo", dataType=DataType.BIG_DECIMAL)
-	private BigDecimal precoMinimo;
+	@DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
+	private Fornecedor fornecedor;
+	@DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
+	private Grupo grupo;
+	@ForeignCollectionField(eager=true, foreignFieldName="produto", maxEagerLevel=2)
+	private Collection<Unidade> unidades;
+
 	private transient boolean vendido = false;
 
 	public Produto() {
 	}
 
-	public Produto(int id, String codigo, String nome, String fornecedor,
-			String grupo, BigDecimal estoque, BigDecimal preco, BigDecimal precoMinimo, String embalagem) {
+	public Produto(int id, String codigo, String nome, Fornecedor fornecedor, Grupo grupo) {
 		super();
 		this.id = id;
 		this.codigo = codigo;
 		this.nome = nome;
 		this.fornecedor = fornecedor;
 		this.grupo = grupo;
-		this.estoque = estoque;
-		this.preco = preco;
-		this.precoMinimo = precoMinimo;
-		this.embalagem = embalagem;
-	}
-
-	public Produto(int id, String codigo, String nome, String fornecedor,
-			String grupo, BigDecimal estoque, BigDecimal preco, BigDecimal precoMinimo, String embalagem,
-			boolean vendido) {
-		super();
-		this.id = id;
-		this.codigo = codigo;
-		this.nome = nome;
-		this.fornecedor = fornecedor;
-		this.grupo = grupo;
-		this.estoque = estoque;
-		this.preco = preco;
-		this.precoMinimo = precoMinimo;
-		this.embalagem = embalagem;
-		this.vendido = vendido;
 	}
 
 	public int getId() {
@@ -84,44 +62,20 @@ public class Produto implements Serializable {
 		this.nome = nome;
 	}
 
-	public String getFornecedor() {
+	public Fornecedor getFornecedor() {
 		return fornecedor;
 	}
 
-	public void setFornecedor(String fornecedor) {
+	public void setFornecedor(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
 	}
 
-	public String getGrupo() {
+	public Grupo getGrupo() {
 		return grupo;
 	}
 
-	public void setGrupo(String grupo) {
+	public void setGrupo(Grupo grupo) {
 		this.grupo = grupo;
-	}
-
-	public BigDecimal getEstoque() {
-		return estoque;
-	}
-
-	public void setEstoque(BigDecimal estoque) {
-		this.estoque = estoque;
-	}
-
-	public BigDecimal getPreco() {
-		return preco;
-	}
-
-	public BigDecimal getPrecoMinimo() {
-		return precoMinimo;
-	}
-
-	public String getEmbalagem() {
-		return embalagem;
-	}
-
-	public void setEmbalagem(String embalagem) {
-		this.embalagem = embalagem;
 	}
 
 	public boolean isVendido() {
@@ -132,6 +86,32 @@ public class Produto implements Serializable {
 		this.vendido = vendido;
 	}
 
+	public Collection<Unidade> getUnidades() {
+		return unidades;
+	}
+
+	public void setUnidades(Collection<Unidade> unidades) {
+		this.unidades = unidades;
+	}
+
+	public Unidade getUnidade(TipoUnidade tipoUnidade) {
+		for (Unidade unidade : getUnidades()) {
+			if (unidade.getTipo() == tipoUnidade) {
+				return unidade;
+			}
+		}
+		return null;
+	}
+	
+	public Unidade getUnidadeDefault() {
+		for (Unidade unidade : getUnidades()) {
+			if (unidade.getTipo() == TipoUnidade.CXA) {
+				return unidade;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -139,7 +119,19 @@ public class Produto implements Serializable {
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		return result;
 	}
-
+	
+	public String toStringUnidades() {
+		StringBuilder builder = new StringBuilder();
+		if (unidades == null && unidades.size() < 1) return null;
+		List<Unidade> unidadesList = new ArrayList<Unidade>(unidades);
+		builder.append(unidadesList.get(0).getQuantidade());
+		for (int i = 1; i < unidadesList.size(); i++) {
+			builder.append(" | ")
+			.append(unidadesList.get(i).getQuantidade());
+		}
+		return builder.toString();
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

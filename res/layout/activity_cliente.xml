@@ -39,7 +39,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Código"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/codigo"
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -57,14 +57,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Fantasia"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/fantasia"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -74,14 +74,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="CNPJ"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/cnpj"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -91,14 +91,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Rz. Social"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/razaoSocial"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -108,14 +108,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Endereço"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/endereco"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -125,14 +125,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Bairro"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/bairro"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -142,14 +142,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Ref."
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/referencia"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -159,14 +159,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Cidade"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/cidade"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -176,14 +176,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Ins.Est. "
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/insEstadual"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -193,14 +193,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Sit"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/situacao"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -210,14 +210,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Limite"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/limite"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -227,14 +227,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Telefone"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/telefone"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -244,14 +244,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Contato"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/responsavel"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -261,14 +261,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Ramo"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/ramo"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -278,14 +278,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Canal"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/canal"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="7.5"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
             </TableRow>
 
             <TableRow android:paddingBottom="15sp" >
@@ -296,7 +296,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.5"
                     android:text="Rate"
-                    android:textSize="18sp" />
+                    android:textSize="13sp" />
 
                 <RatingBar
                     android:id="@+id/rate"

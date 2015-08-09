@@ -14,28 +14,36 @@ public class ItemPedido implements Serializable {
 	private static final long serialVersionUID = 7976143108320065168L;
 	@DatabaseField(generatedId=true)
 	private int id;
-	@DatabaseField(columnName="produto_id", foreignAutoRefresh=true, maxForeignAutoRefreshLevel=3, foreign=true)
+	@DatabaseField(foreignAutoRefresh=true, maxForeignAutoRefreshLevel=3, foreign=true)
 	private Produto produto;
-	@DatabaseField(columnName="pedido_id", foreignAutoRefresh=true, maxForeignAutoRefreshLevel=3, foreign=true)
+	@DatabaseField(foreignAutoRefresh=true, maxForeignAutoRefreshLevel=3, foreign=true)
 	private Pedido pedido;
-	@DatabaseField(columnName="quantidade")
+	@DatabaseField
 	private int quantidade = 0;
-	@DatabaseField(columnName="total", dataType=DataType.BIG_DECIMAL)
+	@DatabaseField(dataType=DataType.BIG_DECIMAL)
 	private BigDecimal total;
-	@DatabaseField(columnName="desconto", dataType=DataType.BIG_DECIMAL)
-	private BigDecimal desconto;
-	@DatabaseField(columnName="prazo")
-	private int prazo;
-	@DatabaseField(columnName="bonificacao")
+	@DatabaseField(dataType=DataType.BIG_DECIMAL)
+	private BigDecimal desconto = BigDecimal.ZERO;
+	@DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
+	private Prazo prazo;
+	@DatabaseField
 	private int bonificacao = 0;
-	@DatabaseField(columnName="precoNegociado", dataType=DataType.BIG_DECIMAL)
-	private BigDecimal precoNegociado;
+	@DatabaseField(dataType=DataType.BIG_DECIMAL)
+	private BigDecimal precoNegociado = BigDecimal.ZERO;
+	@DatabaseField(foreignAutoRefresh=true, maxForeignAutoRefreshLevel=3, foreign=true)
+	private Unidade unidade;
 
 	public ItemPedido() {
 	}
 
-	public ItemPedido(int id, Produto produto, Pedido pedido, int quantidade, BigDecimal total,
-			BigDecimal desconto, int prazo, int bonificacao, BigDecimal precoNegociado) {
+	public ItemPedido(Pedido pedido, Produto produto) {
+		this.pedido = pedido;
+		this.produto = produto;
+		unidade = produto.getUnidadeDefault();
+	}
+	
+	public ItemPedido(int id, Produto produto, Pedido pedido, Prazo prazo, int quantidade, BigDecimal total,
+			BigDecimal desconto, int bonificacao, BigDecimal precoNegociado) {
 		super();
 		this.id = id;
 		this.produto = produto;
@@ -45,6 +53,7 @@ public class ItemPedido implements Serializable {
 		this.desconto = desconto;
 		this.prazo = prazo;
 		this.precoNegociado = precoNegociado;
+		unidade = produto.getUnidadeDefault();
 	}
 
 	public int getId() {
@@ -75,11 +84,11 @@ public class ItemPedido implements Serializable {
 		this.desconto = desconto;
 	}
 
-	public int getPrazo() {
+	public Prazo getPrazo() {
 		return prazo;
 	}
 
-	public void setPrazo(int prazo) {
+	public void setPrazo(Prazo prazo) {
 		this.prazo = prazo;
 	}
 
@@ -99,8 +108,17 @@ public class ItemPedido implements Serializable {
 		this.pedido = pedido;
 	}
 
+	public Unidade getUnidade() {
+		return unidade;
+	}
+
+	public void setUnidade(Unidade unidade) {
+		this.unidade = unidade;
+	}
+
 	public BigDecimal getPrecoNegociado() {
 		try {
+			if (quantidade + bonificacao == 0) return BigDecimal.ZERO;
 			precoNegociado = getTotal().divide(new BigDecimal(quantidade + bonificacao), 2, RoundingMode.UP);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,13 +129,17 @@ public class ItemPedido implements Serializable {
 
 	public BigDecimal getTotal() {
 		try {
-			if (desconto == null) desconto = BigDecimal.TEN;
-			total = produto.getPreco().multiply(BigDecimal.ONE.subtract(desconto.divide(BigDecimal.valueOf(100))))
+			if (desconto == null) desconto = BigDecimal.ZERO;
+			total = unidade.getValor().multiply(BigDecimal.ONE.subtract(desconto.divide(BigDecimal.valueOf(100))))
 					.multiply(new BigDecimal(quantidade)).divide(BigDecimal.ONE, 2, RoundingMode.UP);
 		} catch (Exception e) {
 			e.printStackTrace();
 			total = BigDecimal.ZERO;
 		}
 		return total;
+	}
+	
+	public String toString() {
+		return produto.getCodigo() + " - " + quantidade + " - " + prazo + " - " + bonificacao;
 	}
 }

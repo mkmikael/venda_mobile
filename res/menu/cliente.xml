@@ -14,6 +14,7 @@
     
     <item
         android:showAsAction="ifRoom"
+        android:id="@+id/action_new_pedido"
         android:title="Cadastrar Pedido"/>
     
     <item

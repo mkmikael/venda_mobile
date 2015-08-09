@@ -5,8 +5,10 @@ import java.math.BigDecimal;
 
 import blacksoftware.venda.models.enums.Situacao;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "cliente")
@@ -48,6 +50,8 @@ public class Cliente implements Serializable {
 	private String canal;
 	@DatabaseField(columnName="ramo")
 	private String ramo;
+	@ForeignCollectionField(eager=false, foreignFieldName="cliente")
+	private ForeignCollection<Pedido> pedidos;
 
 	public Cliente() {
 	}
@@ -214,6 +218,14 @@ public class Cliente implements Serializable {
 	@Override
 	public String toString() {
 		return nomeFantasia;
+	}
+
+	public ForeignCollection<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(ForeignCollection<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	@Override

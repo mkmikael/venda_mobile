@@ -8,13 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context="blacksoftware.venda.MainActivity" >
 
-    <AnalogClock
-        android:id="@+id/analogClock1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout1" />
-
     <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/analogClock1"
@@ -42,5 +37,20 @@
             android:layout_weight="5"
             android:text="Enviar" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/console"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout1"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:text="TextView" />
+
+    <AnalogClock
+        android:id="@+id/analogClock1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

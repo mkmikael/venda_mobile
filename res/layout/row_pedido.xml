@@ -20,9 +20,8 @@
                 android:id="@+id/content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CUP NOODLES DE CAMARAO"
                 android:textAppearance="?android:attr/absListViewStyle"
-                android:textSize="13sp" />
+                android:textSize="16sp" />
 
         </TableRow>
 
@@ -36,7 +35,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20sp"
-                android:text="CXA.C/24x1x64x [000000000001]"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="12sp" />
 
@@ -48,9 +46,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="0.83"
-        android:gravity="right"
-        android:text="0,000"
+        android:layout_weight="1.01"
         android:textSize="12sp" />
 
     <Spinner
@@ -59,7 +55,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1.08"
+        android:layout_weight="0.9"
         android:textSize="12sp" >
 
     </Spinner>
@@ -70,8 +66,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="0.83"
-        android:gravity="right"
-        android:text="10,00"
         android:textSize="12sp" />
 
     <Spinner
@@ -81,6 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1.43"
+        android:minWidth="70dip"
         android:textSize="12sp" />
 
     <EditText
@@ -119,7 +114,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="0.75"
-        android:text="0,00"
         android:textSize="12sp" />
 
     <TextView
@@ -129,7 +123,6 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="0.75"
         android:gravity="center_vertical"
-        android:text="0,000"
         android:textSize="12sp" />
 
 </LinearLayout>

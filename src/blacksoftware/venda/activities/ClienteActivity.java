@@ -1,6 +1,6 @@
 package blacksoftware.venda.activities;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import blacksoftware.venda.R;
 import blacksoftware.venda.config.DatabaseOrm;
+import blacksoftware.venda.dao.GenericDAO;
 import blacksoftware.venda.models.Cliente;
+import blacksoftware.venda.models.Pedido;
 
 public class ClienteActivity extends Activity {
 
@@ -51,12 +53,8 @@ public class ClienteActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		List<Cliente> lista = null;
-		try {
-			lista = db.getClienteDao().queryForAll();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		List<Cliente> lista = new ArrayList<Cliente>();
+		lista = new GenericDAO<Cliente>(db, Cliente.class).list();
 		formHelper.setClientesView(this, lista, clientes);
 	}
 
@@ -76,24 +74,24 @@ public class ClienteActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		switch (id) {
-			case R.id.action_pedido:
+			case R.id.action_new_pedido:
 				if (clienteAtual == null) {
 					Toast.makeText(this, "Selecione um cliente", Toast.LENGTH_SHORT).show();
 				} else {
 					Intent intent = new Intent(this, PedidoActivity.class);
-					intent.putExtra("cliente", clienteAtual.getCodigo());
+					intent.putExtra("cliente", clienteAtual);
 					startActivity(intent);
 				}
 				break;
 			default:
 		}
-		return true;
-		//return super.onOptionsItemSelected(item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	private OnItemClickListener itemSelectedListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+			clientes.setSelection(position);
 			@SuppressWarnings("unchecked")
 			Map<String, Object> item = (Map<String, Object>) adapter.getItemAtPosition(position);
 			clienteAtual = (Cliente) item.get("content");
@@ -106,21 +104,31 @@ public class ClienteActivity extends Activity {
 		@Override
 		public boolean onItemLongClick(AdapterView<?> adapter, View view,
 				int position, long id) {
-			String[] items = { "Dt Pedido - Hora Pedido - Valor", "07/04/2015 - 14:30 - 501,32", "08/04/2015 - 14:30 - 1001,32" };
+			final List<Pedido> pedidos = new ArrayList<Pedido>(clienteAtual.getPedidos());
+			String[] itens = null;
+			if (pedidos != null && pedidos.size() > 0) {
+				itens = new String[pedidos.size() + 1];
+				itens[0] = "Cod - Dt Pedido - Hora Pedido - Valor";
+				for (int i = 1; i < itens.length; i++) {
+					itens[i] = pedidos.get(i - 1).toString();
+				}
+			}
 			new AlertDialog.Builder(ClienteActivity.this)
 			.setTitle("Pedidos")
-			.setItems(items, new OnClickListener() {
+			.setItems(itens, new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface di, int index) {
 					System.out.println("Index" + index);
 					if (index != 0) {
 						Intent intent = new Intent(ClienteActivity.this, PedidoActivity.class);
-						intent.putExtra("cliente", clienteAtual.getCodigo());
+						Pedido pedido = pedidos.get(index - 1);
+						System.out.println(pedido.getItensPedido().size());
+						intent.putExtra("pedido", pedido);
 						startActivity(intent);
 					}
 				}
 			}).show();
-			return true;
+			return false;
 		}
 	};
 }
