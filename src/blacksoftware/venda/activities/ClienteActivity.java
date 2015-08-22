@@ -2,6 +2,7 @@ package blacksoftware.venda.activities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import android.app.Activity;
@@ -10,15 +11,21 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import blacksoftware.venda.R;
@@ -32,10 +39,13 @@ public class ClienteActivity extends Activity {
 	private Cliente clienteAtual;
 	
 	private ClienteFormHelper formHelper;
-	private ListView clientes;
+	private ListView clientesView;
+	private EditText filtroClientes;
 	private SparseArray<TextView> clienteDescricao;
 	private RatingBar rate;
 	private DatabaseOrm db = new DatabaseOrm(this);
+	private List<Cliente> clienteList = new ArrayList<Cliente>();
+	private List<Cliente> clienteListCopy = new ArrayList<Cliente>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +55,18 @@ public class ClienteActivity extends Activity {
 		clienteDescricao = new SparseArray<TextView>();
 		formHelper = new ClienteFormHelper();
 		formHelper.initDescricaoView(this, clienteDescricao);
-		clientes = (ListView) findViewById(R.id.clientes);
-		clientes.setOnItemClickListener(itemSelectedListener);
-		clientes.setOnItemLongClickListener(itemLongSelectedListener);
+		clientesView = (ListView) findViewById(R.id.clientes);
+		clientesView.setOnItemClickListener(itemSelectedListener);
+		clientesView.setOnItemLongClickListener(itemLongSelectedListener);
+		initFiltroCliente();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		List<Cliente> lista = new ArrayList<Cliente>();
-		lista = new GenericDAO<Cliente>(db, Cliente.class).list();
-		formHelper.setClientesView(this, lista, clientes);
+		clienteList = new GenericDAO<Cliente>(db, Cliente.class).list();
+		clienteListCopy = new ArrayList<Cliente>(clienteList);
+		formHelper.setClientesView(this, clienteList, clientesView);
 	}
 
 	@Override
@@ -88,10 +99,28 @@ public class ClienteActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	private void initFiltroCliente() {
+		filtroClientes = (EditText) findViewById(R.id.filtroClientes);
+		filtroClientes.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View view, int position, KeyEvent event) {
+				clienteList.clear();
+				String constrains = filtroClientes.getText().toString().toUpperCase(Locale.getDefault());
+				for (Cliente cliente : clienteListCopy) {
+					if (cliente.getNomeFantasia().toUpperCase(Locale.getDefault()).contains(constrains))
+						clienteList.add(cliente);
+				}
+				SimpleAdapter adapter = (SimpleAdapter) clientesView.getAdapter();
+				formHelper.setClientesView(ClienteActivity.this, clienteList, clientesView);
+				adapter.notifyDataSetChanged();
+				return false;
+			}
+		});
+	}
+	
 	private OnItemClickListener itemSelectedListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-			clientes.setSelection(position);
+			clientesView.setSelection(position);
 			@SuppressWarnings("unchecked")
 			Map<String, Object> item = (Map<String, Object>) adapter.getItemAtPosition(position);
 			clienteAtual = (Cliente) item.get("content");
@@ -104,28 +133,26 @@ public class ClienteActivity extends Activity {
 		@Override
 		public boolean onItemLongClick(AdapterView<?> adapter, View view,
 				int position, long id) {
+			// TODO - Criar tabela pedidos
+			itemSelectedListener.onItemClick(adapter, view, position, id);
 			final List<Pedido> pedidos = new ArrayList<Pedido>(clienteAtual.getPedidos());
-			String[] itens = null;
-			if (pedidos != null && pedidos.size() > 0) {
-				itens = new String[pedidos.size() + 1];
-				itens[0] = "Cod - Dt Pedido - Hora Pedido - Valor";
-				for (int i = 1; i < itens.length; i++) {
-					itens[i] = pedidos.get(i - 1).toString();
-				}
-			}
+			final ArrayAdapter<Pedido> arrayAdapter = new ArrayAdapter<Pedido>(ClienteActivity.this, android.R.layout.select_dialog_singlechoice, pedidos);
+			final Intent intent = new Intent(ClienteActivity.this, PedidoActivity.class);
+			intent.putExtra("pedido", pedidos.get(0));
 			new AlertDialog.Builder(ClienteActivity.this)
-			.setTitle("Pedidos")
-			.setItems(itens, new OnClickListener() {
-				@Override
+			.setTitle("Cod - Dt Ped - Dt Fatur - Hora Pedido - Valor")
+			.setNegativeButton("Fechar", null)
+			.setPositiveButton("Selecionar", new OnClickListener() {
 				public void onClick(DialogInterface di, int index) {
-					System.out.println("Index" + index);
-					if (index != 0) {
-						Intent intent = new Intent(ClienteActivity.this, PedidoActivity.class);
-						Pedido pedido = pedidos.get(index - 1);
-						System.out.println(pedido.getItensPedido().size());
-						intent.putExtra("pedido", pedido);
-						startActivity(intent);
-					}
+					Log.i(ClienteActivity.class.getName(), "Ir para PedidoActivity");
+					startActivity(intent);
+				}
+			})
+			.setSingleChoiceItems(arrayAdapter, 0, new OnClickListener() {
+				public void onClick(DialogInterface di, int index) {
+					Pedido pedido = pedidos.get(index);
+					Log.i(ClienteActivity.class.getName(), "Selecionou o cliente " + clienteAtual + " com o pedido " + pedido);
+					intent.putExtra("pedido", pedido);
 				}
 			}).show();
 			return false;

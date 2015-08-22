@@ -140,6 +140,6 @@ public class ItemPedido implements Serializable {
 	}
 	
 	public String toString() {
-		return produto.getCodigo() + " - " + quantidade + " - " + prazo + " - " + bonificacao;
+		return produto.getCodigo() + " - " + quantidade + " - [" + prazo + "] - " + bonificacao;
 	}
 }

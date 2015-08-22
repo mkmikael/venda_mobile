@@ -10,14 +10,24 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="blacksoftware.venda.activities.ClienteActivity" >
 
-    <ListView
-        android:id="@+id/clientes"
+    <LinearLayout 
+        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="5"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbars="vertical" >
-    </ListView>
+        android:layout_weight="5">
+        <EditText 
+            android:id="@+id/filtroClientes"
+            android:hint="Filtro"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"/>
+	    <ListView
+	        android:id="@+id/clientes"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+	        android:scrollbarAlwaysDrawVerticalTrack="true"
+	        android:scrollbars="vertical" >
+	    </ListView>
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollView1"

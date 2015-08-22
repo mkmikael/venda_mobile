@@ -96,9 +96,8 @@ public class PedidoViewHolder {
 				@Override
 				public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
 					System.out.println("ViewHolder Model: " + itemPedido.getPrazo());
-					System.out.println("ViewHolder: " + adapter.getItemAtPosition(position));
 					System.out.println("ViewHolder: " + adapter.getSelectedItem());
-					itemPedido.setPrazo((Prazo) adapter.getItemAtPosition(position));
+					itemPedido.setPrazo((Prazo) adapter.getSelectedItem());
 				}
 
 				@Override

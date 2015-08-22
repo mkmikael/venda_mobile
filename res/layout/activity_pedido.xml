@@ -48,13 +48,11 @@
                 android:text="Fornecedores"
                 android:textSize="12sp" />
 
-            <Spinner
+            <blacksoftware.venda.components.ComboList
                 android:id="@+id/filtroFornecedores"
-                style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:textSize="12sp" />
+                android:layout_gravity="start" />
         </LinearLayout>
 
         <LinearLayout
@@ -63,6 +61,7 @@
             android:layout_column="2"
             android:layout_gravity="start"
             android:layout_row="0"
+            android:paddingLeft="5sp"
             android:orientation="vertical" >
 
             <TextView
@@ -71,13 +70,11 @@
                 android:text="Grupos"
                 android:textSize="12sp" />
 
-            <Spinner
+            <blacksoftware.venda.components.ComboList
                 android:id="@+id/filtroGrupos"
-                style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:textSize="12sp" />
+                android:layout_gravity="start" />
         </LinearLayout>
 
         <LinearLayout

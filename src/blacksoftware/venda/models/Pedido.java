@@ -6,7 +6,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -145,12 +144,10 @@ public class Pedido implements Serializable {
 	}
 	
 	public String toString() {
-		if (dataCriacao == null) {
-			dataCriacao = new Date();
-		}
-		String date = new SimpleDateFormat("dd/MM/yyyy").format(this.getDataCriacao());
+		String dateCriacao = new SimpleDateFormat("dd/MM/yyyy").format(this.getDataCriacao());
+		String dateFatu = new SimpleDateFormat("dd/MM/yyyy").format(this.getDataDeFaturamento());
 		String hora = new SimpleDateFormat("HH:mm").format(this.getDataCriacao());
 		String valor = NumberFormat.getCurrencyInstance().format(this.getTotal());
-		return codigo + " - " + date + " - " + hora + " - " + valor;
+		return codigo + " - " + dateCriacao + " - " + dateFatu + " - " + hora + " - " + valor;
 	}
 }

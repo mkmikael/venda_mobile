@@ -16,7 +16,13 @@
         android:layout_alignParentBottom="true"
         android:gravity="bottom"
         android:orientation="horizontal" >
-
+		
+        <blacksoftware.venda.components.ComboList 
+	        android:id="@+id/comboList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"/>
+        
         <Button
             android:id="@+id/tipo"
             android:layout_width="0dp"
@@ -29,6 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
+            android:onClick="atualizar"
             android:text="Atualizar" />
 
         <Button
@@ -37,14 +44,6 @@
             android:layout_weight="5"
             android:text="Enviar" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/console"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout1"
-        android:layout_alignLeft="@+id/linearLayout1"
-        android:text="TextView" />
 
     <AnalogClock
         android:id="@+id/analogClock1"
