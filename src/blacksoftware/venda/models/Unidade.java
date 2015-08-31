@@ -7,9 +7,7 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import blacksoftware.venda.models.enums.TipoUnidade;
-
-@DatabaseTable(tableName="unidade")
+@DatabaseTable(tableName = "unidade")
 public class Unidade implements Serializable {
 
 	private static final long serialVersionUID = -3479206665111373452L;
@@ -17,10 +15,12 @@ public class Unidade implements Serializable {
 	private Integer id;
 	@DatabaseField(foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreign = true)
 	private Produto produto;
-	@DatabaseField(dataType = DataType.ENUM_INTEGER)
-	private TipoUnidade tipo;
+	@DatabaseField
+	private String tipo;
 	@DatabaseField(dataType = DataType.BIG_DECIMAL)
 	private BigDecimal valor;
+	@DatabaseField(dataType = DataType.BIG_DECIMAL)
+	private BigDecimal valorMinimo;
 	@DatabaseField
 	private int quantidade;
 
@@ -31,7 +31,7 @@ public class Unidade implements Serializable {
 		return id;
 	}
 
-	public Unidade(Integer id, Produto produto, TipoUnidade tipo, BigDecimal valor) {
+	public Unidade(Integer id, Produto produto, String tipo, BigDecimal valor) {
 		super();
 		this.id = id;
 		this.produto = produto;
@@ -39,12 +39,13 @@ public class Unidade implements Serializable {
 		this.valor = valor;
 	}
 
-	public Unidade(Integer id, Produto produto, TipoUnidade tipo, BigDecimal valor, int quantidade) {
+	public Unidade(Integer id, Produto produto, String tipo, BigDecimal valor, BigDecimal valorMinimo, int quantidade) {
 		super();
 		this.id = id;
 		this.produto = produto;
 		this.tipo = tipo;
 		this.valor = valor;
+		this.valorMinimo = valorMinimo;
 		this.quantidade = quantidade;
 	}
 
@@ -60,11 +61,11 @@ public class Unidade implements Serializable {
 		this.produto = produto;
 	}
 
-	public TipoUnidade getTipo() {
+	public String getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(TipoUnidade tipo) {
+	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
 
@@ -76,6 +77,14 @@ public class Unidade implements Serializable {
 		this.valor = valor;
 	}
 
+	public BigDecimal getValorMinimo() {
+		return valorMinimo;
+	}
+
+	public void setValorMinimo(BigDecimal valorMinimo) {
+		this.valorMinimo = valorMinimo;
+	}
+
 	public int getQuantidade() {
 		return quantidade;
 	}
@@ -84,5 +93,9 @@ public class Unidade implements Serializable {
 		this.quantidade = quantidade;
 	}
 
-	
+	@Override
+	public String toString() {
+		return tipo;
+	}
+
 }

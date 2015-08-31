@@ -22,7 +22,7 @@ public class GenericDAO<T> implements Serializable {
 		try {
 			dao = db.getDao(clazz);
 		} catch (Exception e) {
-			throw new RuntimeException("ERRO INSTANCE DAO");
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -73,6 +73,10 @@ public class GenericDAO<T> implements Serializable {
 		} catch (Exception e) {
 			throw new RuntimeException("ERRO IN listBy");
 		}
+	}
+
+	protected Dao<T, Integer> getDao() {
+		return dao;
 	}
 	
 	public void nextId() {

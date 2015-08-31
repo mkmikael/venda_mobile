@@ -17,12 +17,6 @@
         android:gravity="bottom"
         android:orientation="horizontal" >
 		
-        <blacksoftware.venda.components.ComboList 
-	        android:id="@+id/comboList"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"/>
-        
         <Button
             android:id="@+id/tipo"
             android:layout_width="0dp"

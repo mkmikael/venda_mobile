@@ -1,44 +1,27 @@
 package blacksoftware.venda.activities;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 import blacksoftware.venda.R;
-import blacksoftware.venda.components.ComboList;
+import blacksoftware.venda.config.DatabaseOrm;
+import blacksoftware.venda.config.Fixtures;
+import blacksoftware.venda.service.ExcelService;
 
 public class MainActivity extends Activity {
+
+	private DatabaseOrm db = new DatabaseOrm(this);
 	
-	private ComboList<String> comboList;
-	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		List<String> strings = new ArrayList<String>();
-		for (int i = 0; i < 10; i++) {
-			strings.add("Mikael");
-			strings.add("Yan");
-			strings.add("Guilherme");
-		}
-		comboList = (ComboList<String>) findViewById(R.id.comboList);
-		comboList.setList(strings);
 	}
 
 	@Override
@@ -61,30 +44,37 @@ public class MainActivity extends Activity {
 	}
 	
 	public void atualizar(View view) {
-		RequestQueue requestQueue = Volley.newRequestQueue(this);
-		String url = "http://192.168.100.6:8084/webvenda/rest/produto";
-		JsonArrayRequest stringRequest = new JsonArrayRequest(url,
-			new Response.Listener<JSONArray>() {
-				public void onResponse(JSONArray content) {
-					new AlertDialog.Builder(MainActivity.this)
-					.setMessage(content.toString())
-					.setTitle("Request Produtos")
-					.show();
-				}
-		}, 
-			new Response.ErrorListener() {
-				public void onErrorResponse(VolleyError error) {
-					error.printStackTrace();
-					Toast.makeText(MainActivity.this, "Erro", Toast.LENGTH_SHORT).show();
-				}
-		});
-		requestQueue.add(stringRequest);
+		Fixtures.context = this;
+		Fixtures.createCliente();
+		try {
+			FileInputStream inputStream = new FileInputStream("/storage/sdcard/Download/sistema_venda.xls");
+			new ExcelService(this, db).importData(inputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		RequestQueue requestQueue = Volley.newRequestQueue(this);
+//		String url = "http://192.168.100.6:8084/webvenda/rest/produto";
+//		JsonArrayRequest stringRequest = new JsonArrayRequest(url,
+//			new Response.Listener<JSONArray>() {
+//				public void onResponse(JSONArray content) {
+//					new AlertDialog.Builder(MainActivity.this)
+//					.setMessage(content.toString())
+//					.setTitle("Request Produtos")
+//					.show();
+//				}
+//		}, 
+//			new Response.ErrorListener() {
+//				public void onErrorResponse(VolleyError error) {
+//					error.printStackTrace();
+//					Toast.makeText(MainActivity.this, "Erro", Toast.LENGTH_SHORT).show();
+//				}
+//		});
+//		requestQueue.add(stringRequest);
 	}
 	
 	public void irParaClientes(View view) {
 		Intent intent = new Intent(this, ClienteActivity.class);
 		startActivity(intent);
 	}
-	
 	
 }

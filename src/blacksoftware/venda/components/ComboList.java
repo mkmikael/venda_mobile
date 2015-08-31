@@ -30,7 +30,6 @@ public class ComboList<T> extends Button {
 	}
 	
 	private DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-		@Override
 		public void onClick(DialogInterface di, int position) {
 			if (list != null && !list.isEmpty()) {
 				selected = list.get(position);
@@ -52,6 +51,10 @@ public class ComboList<T> extends Button {
 				dialog.show();
 			}
 		});
+	}
+
+	public AlertDialog getDialog() {
+		return dialog;
 	}
 
 	public OnSelectedItemListener<T> getOnSelectedItemListener() {

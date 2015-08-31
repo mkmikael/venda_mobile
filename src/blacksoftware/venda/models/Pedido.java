@@ -7,7 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -15,11 +16,11 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="pedido")
-public class Pedido implements Serializable {
+public class Pedido 	implements Serializable {
 
 	private static final long serialVersionUID = -925355088132929355L;
 	@DatabaseField(generatedId=true)
-	private int id;
+	private Integer id;
 	@DatabaseField
 	private String codigo;
 	@DatabaseField(foreign=true, foreignAutoRefresh=true)
@@ -27,18 +28,17 @@ public class Pedido implements Serializable {
 	@DatabaseField(dataType=DataType.DATE)
 	private Date dataCriacao = new Date();
 	@DatabaseField(dataType=DataType.DATE)
-	private Date dataDeFaturamento;
+	private Date dataDeFaturamento = new Date();
 	@DatabaseField(dataType=DataType.BIG_DECIMAL)
 	private BigDecimal total;
 	@ForeignCollectionField(eager=true, foreignFieldName="pedido", maxEagerLevel=2)
 	private Collection<ItemPedido> itensPedido;
-	private List<ItemPedido> itensPedidoList;
-	private List<Produto> produtos;
+	private Set<Produto> produtos;
 	
 	public Pedido() {
 	}	
 
-	public Pedido(int id, String codigo, Cliente cliente, Date dataCriacao,
+	public Pedido(Integer id, String codigo, Cliente cliente, Date dataCriacao,
 			Date dataDeFaturamento, BigDecimal total) {
 		super();
 		this.id = id;
@@ -49,7 +49,7 @@ public class Pedido implements Serializable {
 		this.total = total;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 	
@@ -85,24 +85,36 @@ public class Pedido implements Serializable {
 		this.dataDeFaturamento = dataDeFaturamento;
 	}
 
-	public List<ItemPedido> getItensPedido() {
-		if (itensPedidoList == null) {
-			itensPedidoList = new ArrayList<ItemPedido>();
-		}
-		if (itensPedido != null && itensPedidoList.isEmpty()) { 
-			itensPedidoList = new ArrayList<ItemPedido>(itensPedido); 
-		}
-		return itensPedidoList;
+	public void addToItemPedido(ItemPedido itemPedido) {
+		itemPedido.setPedido(this);
+		getItensPedido().add(itemPedido);
 	}
 	
-	public List<Produto> getProdutos() {
+	public Collection<ItemPedido> getItensPedido() {
+		if (itensPedido == null) {
+			itensPedido = new ArrayList<ItemPedido>();
+		}
+		return itensPedido;
+	}
+	
+	public Set<Produto> getProdutos() {
 		if (produtos == null) {
-			produtos = new ArrayList<Produto>();
-			for (ItemPedido itemPedido : itensPedido) {
-				produtos.add(itemPedido.getProduto());
-			}
-		} 
+			produtos = new HashSet<Produto>();
+		}
+		for (ItemPedido itemPedido : itensPedido) {
+			produtos.add(itemPedido.getProduto());
+		}
+		System.out.println("Pedido.getProdutos " + produtos);
 		return produtos;
+	}
+	
+	public ItemPedido getItemPedidoByProduto(Produto produto) {
+		for (ItemPedido itemPedido : getItensPedido()) {
+			if (itemPedido.getProduto().equals(produto)) {
+				return itemPedido;
+			}
+		}
+		return null;
 	}
 	
 	public void setItensPedido(Collection<ItemPedido> itensPedido) {
@@ -121,7 +133,7 @@ public class Pedido implements Serializable {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		Integer result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		return result;
 	}

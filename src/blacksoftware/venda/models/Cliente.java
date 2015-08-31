@@ -2,6 +2,8 @@ package blacksoftware.venda.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import blacksoftware.venda.models.enums.Situacao;
 
@@ -51,7 +53,7 @@ public class Cliente implements Serializable {
 	@DatabaseField(columnName="ramo")
 	private String ramo;
 	@ForeignCollectionField(eager=false, foreignFieldName="cliente")
-	private ForeignCollection<Pedido> pedidos;
+	private Collection<Pedido> pedidos;
 
 	public Cliente() {
 	}
@@ -220,7 +222,10 @@ public class Cliente implements Serializable {
 		return nomeFantasia;
 	}
 
-	public ForeignCollection<Pedido> getPedidos() {
+	public Collection<Pedido> getPedidos() {
+		if (pedidos == null) {
+			pedidos = new ArrayList<Pedido>();
+		}
 		return pedidos;
 	}
 

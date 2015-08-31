@@ -9,22 +9,22 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import blacksoftware.venda.models.enums.TipoUnidade;
-
 @DatabaseTable(tableName="produto")
 public class Produto implements Serializable {
 
 	private static final long serialVersionUID = -6654002649371591056L;
 	@DatabaseField(generatedId=true)
-	private int id;
+	private Integer id;
 	@DatabaseField
 	private String codigo;
 	@DatabaseField
 	private String nome;
-	@DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
-	private Fornecedor fornecedor;
-	@DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
-	private Grupo grupo;
+	@DatabaseField
+	private String subDescricao;
+	@DatabaseField
+	private String fornecedor;
+	@DatabaseField
+	private String grupo;
 	@ForeignCollectionField(eager=true, foreignFieldName="produto", maxEagerLevel=2)
 	private Collection<Unidade> unidades;
 
@@ -33,7 +33,7 @@ public class Produto implements Serializable {
 	public Produto() {
 	}
 
-	public Produto(int id, String codigo, String nome, Fornecedor fornecedor, Grupo grupo) {
+	public Produto(Integer id, String codigo, String nome, String fornecedor, String grupo) {
 		super();
 		this.id = id;
 		this.codigo = codigo;
@@ -42,8 +42,12 @@ public class Produto implements Serializable {
 		this.grupo = grupo;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getCodigo() {
@@ -62,19 +66,27 @@ public class Produto implements Serializable {
 		this.nome = nome;
 	}
 
-	public Fornecedor getFornecedor() {
+	public String getSubDescricao() {
+		return subDescricao;
+	}
+
+	public void setSubDescricao(String subDescricao) {
+		this.subDescricao = subDescricao;
+	}
+
+	public String getFornecedor() {
 		return fornecedor;
 	}
 
-	public void setFornecedor(Fornecedor fornecedor) {
+	public void setFornecedor(String fornecedor) {
 		this.fornecedor = fornecedor;
 	}
 
-	public Grupo getGrupo() {
+	public String getGrupo() {
 		return grupo;
 	}
 
-	public void setGrupo(Grupo grupo) {
+	public void setGrupo(String grupo) {
 		this.grupo = grupo;
 	}
 
@@ -94,7 +106,7 @@ public class Produto implements Serializable {
 		this.unidades = unidades;
 	}
 
-	public Unidade getUnidade(TipoUnidade tipoUnidade) {
+	public Unidade getUnidade(String tipoUnidade) {
 		for (Unidade unidade : getUnidades()) {
 			if (unidade.getTipo() == tipoUnidade) {
 				return unidade;
@@ -105,24 +117,22 @@ public class Produto implements Serializable {
 	
 	public Unidade getUnidadeDefault() {
 		for (Unidade unidade : getUnidades()) {
-			if (unidade.getTipo() == TipoUnidade.CXA) {
-				return unidade;
-			}
+			return unidade;
 		}
 		return null;
 	}
 	
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
+		final Integer prime = 31;
+		Integer result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		return result;
 	}
 	
 	public String toStringUnidades() {
+		if (unidades == null || unidades.size() < 1) { return ""; }
 		StringBuilder builder = new StringBuilder();
-		if (unidades == null && unidades.size() < 1) return null;
 		List<Unidade> unidadesList = new ArrayList<Unidade>(unidades);
 		builder.append(unidadesList.get(0).getQuantidade());
 		for (int i = 1; i < unidadesList.size(); i++) {

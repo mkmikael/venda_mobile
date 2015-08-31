@@ -46,6 +46,7 @@ public class ClienteActivity extends Activity {
 	private DatabaseOrm db = new DatabaseOrm(this);
 	private List<Cliente> clienteList = new ArrayList<Cliente>();
 	private List<Cliente> clienteListCopy = new ArrayList<Cliente>();
+	private AlertDialog pedidosDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,12 @@ public class ClienteActivity extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		//pedidosDialog.dismiss();
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		db.close();
@@ -87,10 +94,13 @@ public class ClienteActivity extends Activity {
 		switch (id) {
 			case R.id.action_new_pedido:
 				if (clienteAtual == null) {
+					Log.i(this.getClass().getSimpleName() + ".resumeItensPedidos", "Novo pedido para o cliente " + clienteAtual);
 					Toast.makeText(this, "Selecione um cliente", Toast.LENGTH_SHORT).show();
 				} else {
+					Pedido pedido = new Pedido();
+					pedido.setCliente(clienteAtual);
 					Intent intent = new Intent(this, PedidoActivity.class);
-					intent.putExtra("cliente", clienteAtual);
+					intent.putExtra("pedido", pedido);
 					startActivity(intent);
 				}
 				break;
@@ -134,12 +144,13 @@ public class ClienteActivity extends Activity {
 		public boolean onItemLongClick(AdapterView<?> adapter, View view,
 				int position, long id) {
 			// TODO - Criar tabela pedidos
+			// TODO - Usar dismiss() AlertDialog
 			itemSelectedListener.onItemClick(adapter, view, position, id);
 			final List<Pedido> pedidos = new ArrayList<Pedido>(clienteAtual.getPedidos());
 			final ArrayAdapter<Pedido> arrayAdapter = new ArrayAdapter<Pedido>(ClienteActivity.this, android.R.layout.select_dialog_singlechoice, pedidos);
 			final Intent intent = new Intent(ClienteActivity.this, PedidoActivity.class);
 			intent.putExtra("pedido", pedidos.get(0));
-			new AlertDialog.Builder(ClienteActivity.this)
+			pedidosDialog = new AlertDialog.Builder(ClienteActivity.this)
 			.setTitle("Cod - Dt Ped - Dt Fatur - Hora Pedido - Valor")
 			.setNegativeButton("Fechar", null)
 			.setPositiveButton("Selecionar", new OnClickListener() {
@@ -151,6 +162,7 @@ public class ClienteActivity extends Activity {
 			.setSingleChoiceItems(arrayAdapter, 0, new OnClickListener() {
 				public void onClick(DialogInterface di, int index) {
 					Pedido pedido = pedidos.get(index);
+					Log.i(this.getClass().getSimpleName() + "$itemLongSelectedListener$OnClickListener.onClick", "Alterar pedido " + clienteAtual);
 					Log.i(ClienteActivity.class.getName(), "Selecionou o cliente " + clienteAtual + " com o pedido " + pedido);
 					intent.putExtra("pedido", pedido);
 				}

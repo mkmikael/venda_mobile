@@ -1,6 +1,5 @@
 package blacksoftware.venda.activities;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,36 +25,40 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import blacksoftware.venda.R;
+import blacksoftware.venda.activities.adapters.ItemPedidoChangedListener;
 import blacksoftware.venda.activities.adapters.PedidoAdapter;
 import blacksoftware.venda.components.ComboList;
+import blacksoftware.venda.components.ComboList.OnSelectedItemListener;
 import blacksoftware.venda.config.DatabaseOrm;
 import blacksoftware.venda.dao.GenericDAO;
-import blacksoftware.venda.models.Cliente;
-import blacksoftware.venda.models.Fornecedor;
-import blacksoftware.venda.models.Grupo;
+import blacksoftware.venda.dao.ProdutoDAO;
 import blacksoftware.venda.models.ItemPedido;
 import blacksoftware.venda.models.Pedido;
 import blacksoftware.venda.models.Prazo;
-import blacksoftware.venda.models.Produto;
+import blacksoftware.venda.service.PedidoService;
 
 public class PedidoActivity extends Activity {
 
 	private ListView itensPedidoView;
 	private TextView total;
 	private Button btnCalendar;
-	private ComboList<Fornecedor> filtroFornecedores;
-	private ComboList<Grupo> filtroGrupos;
+	private ComboList<String> filtroFornecedores;
+	private ComboList<String> filtroGrupos;
 	private Spinner alterarPrazos;
 	private PedidoAdapter pedidoAdapter;
 	private CheckBox checkPedidos;
+	
 	private DatabaseOrm db = new DatabaseOrm(this);
 	private Pedido pedido;
+	private PedidoService pedidoService;
+	private ProdutoDAO daoProduto;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		pedidoService = new PedidoService();
+		daoProduto = new ProdutoDAO(db);
 		setContentView(R.layout.activity_pedido);
 		initBtnCalendar();
 		initFiltroFornecedores();
@@ -65,13 +67,20 @@ public class PedidoActivity extends Activity {
 		initCheckPedidos();
 		itensPedidoView = (ListView) findViewById(R.id.itens);
 		total = (TextView) findViewById(R.id.total);
-		pedidoAdapter = new PedidoAdapter(this, db, total);
+		initPedidoAdapter();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		resumeItensPedidos();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		filtroFornecedores.getDialog().dismiss();
+		filtroGrupos.getDialog().dismiss();
 	}
 
 	@Override
@@ -95,62 +104,37 @@ public class PedidoActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	private void initPedidoAdapter() {
+		pedidoAdapter = new PedidoAdapter(this);
+		pedidoAdapter.setItemPedidoChangedListener(new ItemPedidoChangedListener() {
+			@Override
+			public void itemPedidoChanged(ItemPedido itemPedido) {
+				pedidoService.changeItensPedido(pedido, itemPedido);
+				total.setText(pedido.getTotal() + "");
+			}
+		});
+	}
 	
 	private void salvarAction() {
-		GenericDAO<Pedido> pedidoDAO = new GenericDAO<Pedido>(db, Pedido.class);
-		GenericDAO<ItemPedido> itemPedidoDAO = new GenericDAO<ItemPedido>(db, ItemPedido.class);
-		pedidoDAO.save(pedido);
-		List<ItemPedido> itensPedidoCopy = new ArrayList<ItemPedido>(pedido.getItensPedido());
-		for (ItemPedido ip : itensPedidoCopy) {
-			if (ip.getQuantidade() == 0) {
-				Log.i(this.getClass().getSimpleName() + ".onOptionsItemSelected", "Removendo item pedido: " + ip);
-				pedido.getItensPedido().remove(ip);
-				if (ip.getId() > 0) itemPedidoDAO.delete(ip);
-			} else {
-				Log.i(this.getClass().getSimpleName() + ".onOptionsItemSelected", "Salvando item pedido: " + ip);
-				itemPedidoDAO.save(ip);
-			}
-		}
+		pedidoService.saveItensPedido(pedido);
 		Intent irParaCliente = new Intent(this, ClienteActivity.class);
 		startActivity(irParaCliente);
-		Toast.makeText(this, "O pedido foi salvo!", Toast.LENGTH_SHORT).show();
 	}
 	
 	private void resumeItensPedidos() {
-		Cliente clienteInstance = (Cliente) getIntent().getExtras().get("cliente"); 
-		Pedido pedidoInstance = (Pedido) getIntent().getExtras().get("pedido"); 
-		GenericDAO<Produto> daoProduto = new GenericDAO<Produto>(db, Produto.class);
-		if (clienteInstance != null) {
-			Log.i(this.getClass().getSimpleName() + ".resumeItensPedidos", "Novo pedido para o cliente " + clienteInstance);
-			pedido = new Pedido();
-			pedido.setCliente(clienteInstance);
-			for (Produto produto : daoProduto.list()) {
-				Log.i(this.getClass().getSimpleName() + ".resumeItensPedidos", "Add novo item a lista: " + produto);
-				pedido.getItensPedido().add(new ItemPedido(pedido, produto));
-			}
-		} else if (pedidoInstance != null) {
-			Log.i(this.getClass().getSimpleName() + ".resumeItensPedidos", "Alterar pedido " + pedidoInstance);
-			for (Produto produto : daoProduto.list()) {
-				if (!pedidoInstance.getProdutos().contains(produto)) {
-					Log.i(this.getClass().getSimpleName() + ".resumeItensPedidos", "Add novo item a lista: " + produto);
-					pedidoInstance.getItensPedido().add(new ItemPedido(pedidoInstance, produto));
-				}
-			}
-			pedido = pedidoInstance;
-		}
-		Log.i(this.getClass().getSimpleName() + ".resumeItensPedidos", "Pedidos listados" + pedido.getItensPedido());
-		pedidoAdapter.setItens(pedido.getItensPedido());
+		pedido = (Pedido) getIntent().getExtras().get("pedido"); 
+		List<ItemPedido> itensPedidoList = pedidoService.carregarItensPedido(pedido, daoProduto.list(), checkPedidos.isChecked());
+		pedidoAdapter.setItens(itensPedidoList);
 		itensPedidoView.setAdapter(pedidoAdapter);
-		total.setText(pedido.getTotal().toString());
+		total.setText(pedido.getTotal() + "");
 	}
 	
 	private void initCheckPedidos() {
 		checkPedidos = (CheckBox) findViewById(R.id.checkPedidos);
 		checkPedidos.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-				pedidoAdapter.filterItensVendidos(checked);
+//				pedidoAdapter.filterItensVendidos(checked);
 			}
 		});
 	}
@@ -189,29 +173,45 @@ public class PedidoActivity extends Activity {
 	
 	@SuppressWarnings("rawtypes")
 	private ComboList.OnSelectedItemListener filterListener = new ComboList.OnSelectedItemListener() {
+		@Override
 		public void onSelectedItem(Object item, int position) {
-			pedidoAdapter.filter((Fornecedor)filtroFornecedores.getSelectedItem(), (Grupo)filtroGrupos.getSelectedItem());
+			String fornecedor = filtroFornecedores.getSelectedItem();
+			String grupo = filtroGrupos.getSelectedItem();
+			grupo = grupo.equals("Todos") ? null : grupo;
+			fornecedor = fornecedor.equals("Todos") ? null : fornecedor;
+			List<ItemPedido> carregarItensPedido = pedidoService.carregarItensPedido(pedido, daoProduto.criteriaFornecedorAndGrupo(fornecedor, grupo), checkPedidos.isChecked());
+			pedidoAdapter.setItens(carregarItensPedido);
+			pedidoAdapter.notifyDataSetChanged();
 		}
 	};
 	
 	@SuppressWarnings("unchecked")
 	private void initFiltroFornecedores() {
-		filtroFornecedores = (ComboList<Fornecedor>) findViewById(R.id.filtroFornecedores);
-		GenericDAO<Fornecedor> forDao = new GenericDAO<Fornecedor>(db, Fornecedor.class);
-		final LinkedList<Fornecedor> fornecedoresList = new LinkedList<Fornecedor>(forDao.list());
-		final Fornecedor fornecedorNull = new Fornecedor(0, "", "Todos");
-		fornecedoresList.addFirst(fornecedorNull);
+		filtroFornecedores = (ComboList<String>) findViewById(R.id.filtroFornecedores);
+		ProdutoDAO daoProduto = new ProdutoDAO(db);
+		final LinkedList<String> fornecedoresList = new LinkedList<String>(daoProduto.findFornecedores());
+		fornecedoresList.addFirst("Todos");
 		filtroFornecedores.setList(fornecedoresList);
-		filtroFornecedores.setOnSelectedItemListener(filterListener);
+		filtroFornecedores.setOnSelectedItemListener(new OnSelectedItemListener<String>() {
+			@Override
+			public void onSelectedItem(String item, int position) {
+				ProdutoDAO daoProduto = new ProdutoDAO(db);
+				if (!filtroFornecedores.getSelectedItem().equals("Todos")) {
+					LinkedList<String> gruposList = new LinkedList<String>(daoProduto.findGruposByFornecedor(filtroFornecedores.getSelectedItem()));
+					gruposList.addFirst("Todos");
+					filtroGrupos.setList(gruposList);
+				}
+				filterListener.onSelectedItem(item, position);
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	private void initFiltroGrupos() {
-		filtroGrupos = (ComboList<Grupo>) findViewById(R.id.filtroGrupos);
-		GenericDAO<Grupo> grupoDao = new GenericDAO<Grupo>(db, Grupo.class);
-		final LinkedList<Grupo> grupoList = new LinkedList<Grupo>(grupoDao.list());
-		final Grupo grupoNull = new Grupo(0, "", "Todos");
-		grupoList.addFirst(grupoNull);
+		filtroGrupos = (ComboList<String>) findViewById(R.id.filtroGrupos);
+		ProdutoDAO daoProduto = new ProdutoDAO(db);
+		final LinkedList<String> grupoList = new LinkedList<String>(daoProduto.findGrupos());
+		grupoList.addFirst("Todos");
 		filtroGrupos.setList(grupoList);
 		filtroGrupos.setOnSelectedItemListener(filterListener);
 	}

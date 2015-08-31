@@ -7,37 +7,19 @@ import com.j256.ormlite.dao.Dao;
 
 import android.content.Context;
 import blacksoftware.venda.models.Cliente;
-import blacksoftware.venda.models.Fornecedor;
-import blacksoftware.venda.models.Grupo;
 import blacksoftware.venda.models.ItemPedido;
 import blacksoftware.venda.models.Pedido;
 import blacksoftware.venda.models.Prazo;
 import blacksoftware.venda.models.Produto;
 import blacksoftware.venda.models.Unidade;
 import blacksoftware.venda.models.enums.Situacao;
-import blacksoftware.venda.models.enums.TipoUnidade;
 
 public class Fixtures {
 	
 	public static Context context;
 	
 	public static void init() {
-		Prazo prazo = createPrazo(new Prazo(1, 3, "7 - 14 - 21"));
-		createPrazo(new Prazo(2, 2, "7 - 14"));
-		createPrazo(new Prazo(3, 1, "7"));
-		Fornecedor fornecedor1 = createFornecedor(new Fornecedor(1, "0001", "RICOSA"));
-		Fornecedor fornecedor2 = createFornecedor(new Fornecedor(2, "0002", "INDAIA"));
-		Grupo grupo = createGrupo();
-		Cliente cliente = createCliente();
-		Produto produto1 = createProduto(new Produto(1, "000000001", "CUP NOODES PIZZA", fornecedor1, grupo));
-		Produto produto2 = createProduto(new Produto(2, "000000002", "CUP NOODES CAMARAO", fornecedor2, grupo));
-		Pedido pedido = createPedido(cliente);
-		createItemPedido(1, produto1, pedido, prazo);
-		createItemPedido(2, produto2, pedido, prazo);
-		createUnidade(new Unidade(1, produto1, TipoUnidade.CXA, new BigDecimal(144.20), 100));
-		createUnidade(new Unidade(2, produto1, TipoUnidade.UNI, new BigDecimal(6.01), 10));
-		createUnidade(new Unidade(3, produto2, TipoUnidade.CXA, new BigDecimal(38.89), 100));
-		createUnidade(new Unidade(4, produto2, TipoUnidade.UNI, new BigDecimal(4.78), 10));
+		createCliente();
 	}
 	
 	public static Prazo createPrazo(Prazo prazo) {
@@ -46,33 +28,6 @@ public class Fixtures {
 			databaseOrm = new DatabaseOrm(context);
 			Dao<Prazo,Integer> genericDao = databaseOrm.getDao(Prazo.class);
 			return genericDao.createIfNotExists(prazo);
-		} catch (Exception e) {
-			return null;
-		}finally {
-			if (databaseOrm != null) databaseOrm.close();
-		}
-	}
-	
-	public static Fornecedor createFornecedor(Fornecedor fornecedor) {
-		DatabaseOrm databaseOrm = null;
-		try {
-			databaseOrm = new DatabaseOrm(context);
-			Dao<Fornecedor,Integer> genericDao = databaseOrm.getDao(Fornecedor.class);
-			return genericDao.createIfNotExists(fornecedor);
-		} catch (Exception e) {
-			return null;
-		}finally {
-			if (databaseOrm != null) databaseOrm.close();
-		}
-	}
-	
-	public static Grupo createGrupo() {
-		DatabaseOrm databaseOrm = null;
-		try {
-			databaseOrm = new DatabaseOrm(context);
-			Dao<Grupo,Integer> genericDao = databaseOrm.getDao(Grupo.class);
-			Grupo grupo = new Grupo(1, "0001", "AGUA");
-			return genericDao.createIfNotExists(grupo);
 		} catch (Exception e) {
 			return null;
 		}finally {

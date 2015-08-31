@@ -1,28 +1,75 @@
 package blacksoftware.venda.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.util.Log;
+import blacksoftware.venda.config.DatabaseOrm;
+import blacksoftware.venda.dao.GenericDAO;
+import blacksoftware.venda.models.ItemPedido;
+import blacksoftware.venda.models.Pedido;
+import blacksoftware.venda.models.Produto;
 
 public class PedidoService {
 
-	public BigDecimal calcularTotal(int quantidade, BigDecimal preco, BigDecimal desconto) {
-		try {
-			if (preco == null) preco = BigDecimal.ZERO;
-			if (desconto == null) desconto = BigDecimal.ZERO;
-			return preco.multiply(BigDecimal.ONE.subtract(desconto.divide(BigDecimal.valueOf(100))))
-					.multiply(new BigDecimal(quantidade)).divide(BigDecimal.ONE, 2, RoundingMode.UP);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return BigDecimal.ZERO;
+	private GenericDAO<ItemPedido> daoItemPedido;
+	private GenericDAO<Pedido> daoPedido;
+	
+	public PedidoService() {
+	}
+	
+	public PedidoService(DatabaseOrm db) {
+		daoItemPedido = new GenericDAO<ItemPedido>(db, ItemPedido.class);
+		daoPedido = new GenericDAO<Pedido>(db, Pedido.class);
+	}
+
+	public void changeItensPedido(Pedido pedido, ItemPedido itemPedido) {
+		if (itemPedido.getQuantidade() > 0) {
+			if (!pedido.getItensPedido().contains(itemPedido)) {
+				pedido.getItensPedido().add(itemPedido);
+				Log.i("PedidoService.changeItensPedido", "Add item: " + itemPedido.toString());
+			}
+		} else if (pedido.getItensPedido().contains(itemPedido)) {
+			pedido.getItensPedido().remove(itemPedido);
+			Log.i("PedidoService.changeItensPedido", "Delete " + itemPedido.toString());
 		}
 	}
 	
-	public BigDecimal calcularUnitario(int quantidade, BigDecimal preco, BigDecimal desconto, int bonificacao) {
-		try {
-			return calcularTotal(quantidade, preco, desconto).divide(new BigDecimal(quantidade + bonificacao), 2, RoundingMode.UP);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return BigDecimal.ZERO;
+	public void saveItensPedido(Pedido pedido) {
+		daoPedido.save(pedido);
+		for (ItemPedido itemPedido : pedido.getItensPedido()) {
+			if (itemPedido.getQuantidade() > 0) {
+				daoItemPedido.save(itemPedido);
+				Log.i("PedidoService.saveItensPedido", "salvando item pedido:"  + itemPedido);
+			} else {
+				Log.i("PedidoService.saveItensPedido", "o item pedido nao foi salvo:"  + itemPedido);
+			}
 		}
 	}
+	
+	public List<ItemPedido> carregarItensPedido(Pedido pedido, List<Produto> produtoList, boolean isVendidos) {
+		ArrayList<ItemPedido> itemPedidoList = new ArrayList<ItemPedido>();
+		if (produtoList == null) return itemPedidoList;
+		Log.i(getClass().getSimpleName() + ".carregarItensPedido", pedido.getCliente() + " - Itens: " + pedido.getItensPedido().size());
+		if (pedido.getItensPedido().isEmpty()) {
+			Log.i(getClass().getSimpleName(), "Lista vazia");
+			for (Produto produto : produtoList) {
+				itemPedidoList.add(new ItemPedido(pedido, produto));
+			}
+		} else {
+			for (Produto produto : produtoList) {
+				if (pedido.getProdutos().contains(produto)) {
+					Log.i(getClass().getSimpleName(), "Ja carregado" + produto);
+					if (isVendidos)
+						itemPedidoList.add(0, pedido.getItemPedidoByProduto(produto));
+					else
+						itemPedidoList.add(pedido.getItemPedidoByProduto(produto));
+				} else {
+					itemPedidoList.add(new ItemPedido(pedido, produto));
+				}
+			}
+		}
+		return itemPedidoList;
+	}
+	
 }

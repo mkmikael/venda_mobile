@@ -2,7 +2,6 @@ package blacksoftware.venda.config;
 
 import java.sql.SQLException;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -12,8 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import blacksoftware.venda.models.Cliente;
 import blacksoftware.venda.models.Cobranca;
-import blacksoftware.venda.models.Fornecedor;
-import blacksoftware.venda.models.Grupo;
 import blacksoftware.venda.models.ItemCobranca;
 import blacksoftware.venda.models.ItemPedido;
 import blacksoftware.venda.models.Pedido;
@@ -38,8 +35,6 @@ public class DatabaseOrm extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, Pedido.class);
 			TableUtils.createTable(connectionSource, ItemPedido.class);
 			TableUtils.createTable(connectionSource, Unidade.class);
-			TableUtils.createTable(connectionSource, Grupo.class);
-			TableUtils.createTable(connectionSource, Fornecedor.class);
 			TableUtils.createTable(connectionSource, Prazo.class);
 			TableUtils.createTable(connectionSource, Cobranca.class);
 			TableUtils.createTable(connectionSource, ItemCobranca.class);
