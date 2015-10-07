@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import blacksoftware.venda.R;
 import blacksoftware.venda.models.ItemPedido;
-import blacksoftware.venda.models.Prazo;
 import blacksoftware.venda.models.Unidade;
 import blacksoftware.venda.util.Util;
 
@@ -25,7 +24,6 @@ public class PedidoViewHolder {
 	private TextView subcontent;
 	private TextView estoque;
 	private Spinner tipoView;
-	private Spinner prazoView;
 	private TextView precoView;
 	private EditText quantidadeView;
 	private EditText bonificacaoView;
@@ -34,13 +32,11 @@ public class PedidoViewHolder {
 	private TextView subtotal;
 	
 	private ItemPedido itemPedido;
-	private List<Prazo> prazos;
 	private ItemPedidoChangedListener itemPedidoChangedListener;
 	
-	public PedidoViewHolder(ItemPedido itemPedido, View view, List<Prazo> prazos) {
+	public PedidoViewHolder(ItemPedido itemPedido, View view) {
 		this.itemPedido = itemPedido;
 		this.view = view;
-		this.prazos = prazos;
 		content = (TextView) view.findViewById(R.id.content);
 		subcontent = (TextView) view.findViewById(R.id.subcontent);
 		estoque = (TextView) view.findViewById(R.id.estoque);
@@ -48,7 +44,6 @@ public class PedidoViewHolder {
 		precoUnitario = (TextView) view.findViewById(R.id.precoUnitario);
 		subtotal = (TextView) view.findViewById(R.id.subtotal);
 		initTipo();
-		initPrazo();
 		initDesconto();
 		initQuantidade();
 		initBonificacao();
@@ -71,28 +66,17 @@ public class PedidoViewHolder {
 		});
 	}
 
-	private void initPrazo() {
-		prazoView = (Spinner) view.findViewById(R.id.prazo);
-		if (prazos == null || prazos.isEmpty()) return;
-		ArrayAdapter<Prazo> arrayAdapter = new ArrayAdapter<Prazo>(view.getContext(),
-				android.R.layout.simple_spinner_item, prazos);
-		prazoView.setAdapter(arrayAdapter);
-		prazoView.setSelection(arrayAdapter.getPosition(itemPedido.getPrazo()));
-		prazoView.setOnItemSelectedListener(new OnItemSelectedListener() {
-			public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
-				itemPedido.setPrazo((Prazo) adapter.getSelectedItem());
-			}
-			public void onNothingSelected(AdapterView<?> adapter) {}
-		});
-	}
-
 	private void initDesconto() {
 		descontoView = (EditText) view.findViewById(R.id.desconto);
 		descontoView.addTextChangedListener(new TextWatcherAdapter() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				BigDecimal desc = BigDecimal.ZERO;
 				try {
-					desc = new BigDecimal(s.toString());
+					if (s.toString().isEmpty()) {
+						desc = BigDecimal.ZERO;
+					} else {
+						desc = new BigDecimal(s.toString());
+					}
 					if (desc.doubleValue() < 0 && desc.doubleValue() > 100) 
 						throw new NumberFormatException();
 				} catch (NumberFormatException e) {
@@ -134,7 +118,11 @@ public class PedidoViewHolder {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				int bonif = 0;
 				try {
-					bonif = Integer.valueOf(s.toString());
+					if (s.toString().isEmpty()) {
+						bonif = 0;
+					} else {
+						bonif = Integer.valueOf(s.toString());
+					}
 				} catch (NumberFormatException e) {
 					bonificacaoView.setText("");
 					bonif = 0;

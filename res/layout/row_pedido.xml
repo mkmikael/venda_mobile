@@ -55,7 +55,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="0.9"
+        android:layout_weight="0.7"
         android:textSize="12sp" >
 
     </Spinner>
@@ -66,16 +66,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="0.83"
-        android:textSize="12sp" />
-
-    <Spinner
-        android:id="@+id/prazo"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1.43"
-        android:minWidth="70dip"
         android:textSize="12sp" />
 
     <EditText

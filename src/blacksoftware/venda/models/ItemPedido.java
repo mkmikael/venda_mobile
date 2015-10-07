@@ -24,8 +24,6 @@ public class ItemPedido implements Serializable {
 	private BigDecimal total;
 	@DatabaseField(dataType=DataType.BIG_DECIMAL)
 	private BigDecimal desconto = BigDecimal.ZERO;
-	@DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
-	private Prazo prazo;
 	@DatabaseField
 	private int bonificacao = 0;
 	@DatabaseField(dataType=DataType.BIG_DECIMAL)
@@ -34,7 +32,6 @@ public class ItemPedido implements Serializable {
 	private Unidade unidade;
 
 	public ItemPedido() {
-		unidade = produto.getUnidadeDefault();
 	}
 
 	public ItemPedido(Produto produto) {
@@ -58,7 +55,6 @@ public class ItemPedido implements Serializable {
 		this.quantidade = quantidade;
 		this.total = total;
 		this.desconto = desconto;
-		this.prazo = prazo;
 		this.precoNegociado = precoNegociado;
 		unidade = produto.getUnidadeDefault();
 	}
@@ -93,14 +89,6 @@ public class ItemPedido implements Serializable {
 
 	public void setDesconto(BigDecimal desconto) {
 		this.desconto = desconto;
-	}
-
-	public Prazo getPrazo() {
-		return prazo;
-	}
-
-	public void setPrazo(Prazo prazo) {
-		this.prazo = prazo;
 	}
 
 	public int getBonificacao() {
@@ -184,6 +172,6 @@ public class ItemPedido implements Serializable {
 	}
 
 	public String toString() {
-		return produto.getCodigo() + " - " + quantidade + " - [" + prazo + "] - " + bonificacao;
+		return produto.getCodigo() + " - " + quantidade + " - " + bonificacao;
 	}
 }

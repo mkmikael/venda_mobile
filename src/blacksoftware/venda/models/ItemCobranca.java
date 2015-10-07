@@ -18,6 +18,8 @@ public class ItemCobranca implements Serializable {
 	private Date dataCobranca;
 	@DatabaseField(dataType=DataType.BIG_DECIMAL)
 	private BigDecimal valor;
+	@DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
+	private Cobranca cobranca;
 	
 	public ItemCobranca() {
 	}
@@ -52,8 +54,21 @@ public class ItemCobranca implements Serializable {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
+	
+	public Cobranca getCobranca() {
+		return cobranca;
+	}
+
+	public void setCobranca(Cobranca cobranca) {
+		this.cobranca = cobranca;
+	}
+
 	public String toString() {
-		return new SimpleDateFormat("dd/MM/yyyy").format(dataCobranca) + " - " + NumberFormat.getCurrencyInstance().format(valor.doubleValue());
+		try {
+			return new SimpleDateFormat("dd/MM/yyyy").format(dataCobranca) + " - " + NumberFormat.getCurrencyInstance().format(valor.doubleValue());
+		} catch (Exception e) {
+			return "";
+		}
 	}
 	
 }

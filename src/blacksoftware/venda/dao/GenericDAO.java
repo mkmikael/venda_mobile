@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.j256.ormlite.dao.Dao;
 
+import android.util.Log;
 import blacksoftware.venda.config.DatabaseOrm;
 
 public class GenericDAO<T> implements Serializable {
@@ -54,7 +55,16 @@ public class GenericDAO<T> implements Serializable {
 		try {
 			return dao.queryForAll();
 		} catch (Exception e) {
+			Log.e("GenericDAO.list", "", e);
 			throw new RuntimeException("ERRO IN LIST");
+		}
+	}
+	
+	public long count() {
+		try {
+			return dao.countOf();
+		} catch (Exception e) {
+			throw new RuntimeException("ERRO IN count");
 		}
 	}
 

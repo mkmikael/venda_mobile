@@ -1,10 +1,13 @@
 package blacksoftware.venda.models;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "cobranca")
@@ -19,6 +22,8 @@ public class Cobranca implements Serializable {
 	private String codigo;
 	@DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	private Cliente cliente;
+	@ForeignCollectionField(eager=true, foreignFieldName="cobranca", maxEagerLevel=2, orderColumnName="dataCobranca")
+	private Collection<ItemCobranca> itensCobranca;
 
 	public Cobranca() {
 	}
@@ -62,7 +67,22 @@ public class Cobranca implements Serializable {
 		this.dataCriacao = dataCriacao;
 	}
 
+	public Collection<ItemCobranca> getItensCobranca() {
+		return itensCobranca;
+	}
+
+	public void setItensCobranca(Collection<ItemCobranca> itensCobranca) {
+		this.itensCobranca = itensCobranca;
+	}
+
 	public String toString() {
-		return codigo + " - " + cliente;
+		try {
+			StringBuilder builder = new StringBuilder(codigo)
+					.append(" - ")
+					.append(new SimpleDateFormat("dd/MM/yyyy").format(dataCriacao));
+			return builder.toString();
+		} catch (Exception e) {
+			return codigo + " ERRO";
+		}
 	}
 }

@@ -17,6 +17,7 @@ import blacksoftware.venda.models.Pedido;
 import blacksoftware.venda.models.Prazo;
 import blacksoftware.venda.models.Produto;
 import blacksoftware.venda.models.Unidade;
+import blacksoftware.venda.models.Usuario;
 
 public class DatabaseOrm extends OrmLiteSqliteOpenHelper {
 
@@ -38,6 +39,7 @@ public class DatabaseOrm extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, Prazo.class);
 			TableUtils.createTable(connectionSource, Cobranca.class);
 			TableUtils.createTable(connectionSource, ItemCobranca.class);
+			TableUtils.createTable(connectionSource, Usuario.class);
 		} catch (SQLException e) {
 			Log.e(this.getClass().getName(), "Unable to create databases", e);
 			e.printStackTrace();

@@ -16,8 +16,10 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="pedido")
-public class Pedido 	implements Serializable {
+public class Pedido implements Serializable {
 
+	public enum StatusPedido { NOVO, SINCRONIZADO }
+	
 	private static final long serialVersionUID = -925355088132929355L;
 	@DatabaseField(generatedId=true)
 	private Integer id;
@@ -25,12 +27,16 @@ public class Pedido 	implements Serializable {
 	private String codigo;
 	@DatabaseField(foreign=true, foreignAutoRefresh=true)
 	private Cliente cliente;
+	@DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
+	private Prazo prazo;
 	@DatabaseField(dataType=DataType.DATE)
 	private Date dataCriacao = new Date();
 	@DatabaseField(dataType=DataType.DATE)
 	private Date dataDeFaturamento = new Date();
 	@DatabaseField(dataType=DataType.BIG_DECIMAL)
 	private BigDecimal total;
+	@DatabaseField(dataType=DataType.ENUM_INTEGER)
+	private StatusPedido statusPedido = StatusPedido.NOVO;
 	@ForeignCollectionField(eager=true, foreignFieldName="pedido", maxEagerLevel=2)
 	private Collection<ItemPedido> itensPedido;
 	private Set<Produto> produtos;
@@ -59,6 +65,22 @@ public class Pedido 	implements Serializable {
 
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
+	}
+
+	public Prazo getPrazo() {
+		return prazo;
+	}
+
+	public void setPrazo(Prazo prazo) {
+		this.prazo = prazo;
+	}
+
+	public StatusPedido getStatusPedido() {
+		return statusPedido;
+	}
+
+	public void setStatusPedido(StatusPedido statusPedido) {
+		this.statusPedido = statusPedido;
 	}
 
 	public Cliente getCliente() {
@@ -104,7 +126,6 @@ public class Pedido 	implements Serializable {
 		for (ItemPedido itemPedido : itensPedido) {
 			produtos.add(itemPedido.getProduto());
 		}
-		System.out.println("Pedido.getProdutos " + produtos);
 		return produtos;
 	}
 	
@@ -160,6 +181,6 @@ public class Pedido 	implements Serializable {
 		String dateFatu = new SimpleDateFormat("dd/MM/yyyy").format(this.getDataDeFaturamento());
 		String hora = new SimpleDateFormat("HH:mm").format(this.getDataCriacao());
 		String valor = NumberFormat.getCurrencyInstance().format(this.getTotal());
-		return codigo + " - " + dateCriacao + " - " + dateFatu + " - " + hora + " - " + valor;
+		return dateCriacao + " - " + dateFatu + " - " + hora + " - " + valor;
 	}
 }

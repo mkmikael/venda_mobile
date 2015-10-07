@@ -13,7 +13,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Produto implements Serializable {
 
 	private static final long serialVersionUID = -6654002649371591056L;
-	@DatabaseField(generatedId=true)
+	@DatabaseField(id=true)
 	private Integer id;
 	@DatabaseField
 	private String codigo;
@@ -136,7 +136,7 @@ public class Produto implements Serializable {
 		List<Unidade> unidadesList = new ArrayList<Unidade>(unidades);
 		builder.append(unidadesList.get(0).getQuantidade());
 		for (int i = 1; i < unidadesList.size(); i++) {
-			builder.append(" | ")
+			builder.append(" ; ")
 			.append(unidadesList.get(i).getQuantidade());
 		}
 		return builder.toString();

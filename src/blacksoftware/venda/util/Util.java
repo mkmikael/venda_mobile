@@ -12,4 +12,13 @@ public class Util {
 	public static String roundToString(BigDecimal bigDecimal) {
 		return round(bigDecimal).toString();
 	}
+	
+	public static String preencherTexto(int quantidade, String string) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (int i = 0; i < quantidade - string.trim().length(); i++) {
+			stringBuilder.append("0");
+		}
+		stringBuilder.append(string.trim());
+		return null;
+	}
 }

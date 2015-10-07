@@ -18,7 +18,7 @@ public class Cliente implements Serializable {
 
 	private static final long serialVersionUID = -4433715046586611341L;
 	
-	@DatabaseField(generatedId=true)
+	@DatabaseField(id = true)
 	private int id;
 	@DatabaseField(columnName="codigo")
 	private String codigo;

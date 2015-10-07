@@ -2,8 +2,6 @@ package blacksoftware.venda.activities.adapters;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
@@ -13,13 +11,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import blacksoftware.venda.R;
 import blacksoftware.venda.models.ItemPedido;
-import blacksoftware.venda.models.Prazo;
 
 public class PedidoAdapter extends BaseAdapter {
 
 	private LayoutInflater layoutInflate;
 	private List<ItemPedido> itensPedidoList;
-	private List<Prazo> prazos = new ArrayList<Prazo>();
 	
 	private ItemPedidoChangedListener itemPedidoChangedListener = new ItemPedidoChangedListener() {
 		public void itemPedidoChanged(ItemPedido itemPedido) { }
@@ -50,7 +46,7 @@ public class PedidoAdapter extends BaseAdapter {
 		ItemPedido itemPedido = getItem(position);
 		if (convertView == null) {
 			convertView = layoutInflate.inflate(R.layout.row_pedido, parent, false);
-			viewHolder = new PedidoViewHolder(itemPedido, convertView, prazos);
+			viewHolder = new PedidoViewHolder(itemPedido, convertView);
 			viewHolder.setItemPedidoChangedListener(itemPedidoChangedListener);
 			convertView.setTag(viewHolder);
 		} else {
@@ -62,31 +58,6 @@ public class PedidoAdapter extends BaseAdapter {
 
 	public void setItens(Collection<ItemPedido> itensPedido) {
 		this.itensPedidoList = new ArrayList<ItemPedido>(itensPedido);
-	}
-
-	public void filterItensVendidos(boolean vendido) {
-		if (vendido) {
-			Collections.sort(itensPedidoList, new Comparator<ItemPedido>() {
-				@Override
-				public int compare(ItemPedido item1, ItemPedido item2) {
-					if (item1.getQuantidade() < item2.getQuantidade()) {
-						return 1;
-					} else if (item1.getQuantidade() > item2.getQuantidade()) {
-						return -1;
-					} else {
-						return 0;
-					}
-				}
-			});
-		} else {
-			Collections.sort(itensPedidoList, new Comparator<ItemPedido>() {
-				@Override
-				public int compare(ItemPedido item1, ItemPedido item2) {
-					return item2.getProduto().getNome().compareToIgnoreCase(item1.getProduto().getNome());
-				}
-			});
-		}
-		notifyDataSetChanged();
 	}
 
 	public void setItemPedidoChangedListener(ItemPedidoChangedListener itemPedidoChangedListener) {

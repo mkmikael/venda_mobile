@@ -15,9 +15,6 @@ public class PedidoService {
 	private GenericDAO<ItemPedido> daoItemPedido;
 	private GenericDAO<Pedido> daoPedido;
 	
-	public PedidoService() {
-	}
-	
 	public PedidoService(DatabaseOrm db) {
 		daoItemPedido = new GenericDAO<ItemPedido>(db, ItemPedido.class);
 		daoPedido = new GenericDAO<Pedido>(db, Pedido.class);
@@ -47,9 +44,9 @@ public class PedidoService {
 		}
 	}
 	
-	public List<ItemPedido> carregarItensPedido(Pedido pedido, List<Produto> produtoList, boolean isVendidos) {
-		ArrayList<ItemPedido> itemPedidoList = new ArrayList<ItemPedido>();
-		if (produtoList == null) return itemPedidoList;
+	public List<ItemPedido> carregarItensPedido(Pedido pedido, List<Produto> produtoList) {
+		List<ItemPedido> itemPedidoList = new ArrayList<ItemPedido>();
+		if (produtoList == null) return new ArrayList<ItemPedido>();
 		Log.i(getClass().getSimpleName() + ".carregarItensPedido", pedido.getCliente() + " - Itens: " + pedido.getItensPedido().size());
 		if (pedido.getItensPedido().isEmpty()) {
 			Log.i(getClass().getSimpleName(), "Lista vazia");
@@ -60,10 +57,7 @@ public class PedidoService {
 			for (Produto produto : produtoList) {
 				if (pedido.getProdutos().contains(produto)) {
 					Log.i(getClass().getSimpleName(), "Ja carregado" + produto);
-					if (isVendidos)
-						itemPedidoList.add(0, pedido.getItemPedidoByProduto(produto));
-					else
-						itemPedidoList.add(pedido.getItemPedidoByProduto(produto));
+					itemPedidoList.add(pedido.getItemPedidoByProduto(produto));
 				} else {
 					itemPedidoList.add(new ItemPedido(pedido, produto));
 				}
@@ -71,5 +65,4 @@ public class PedidoService {
 		}
 		return itemPedidoList;
 	}
-	
 }

@@ -13,7 +13,7 @@ public class Unidade implements Serializable {
 	private static final long serialVersionUID = -3479206665111373452L;
 	@DatabaseField(generatedId = true)
 	private Integer id;
-	@DatabaseField(foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreign = true)
+	@DatabaseField(foreignAutoRefresh = true, foreignAutoCreate = true, maxForeignAutoRefreshLevel = 3, foreign = true)
 	private Produto produto;
 	@DatabaseField
 	private String tipo;
