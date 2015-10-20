@@ -36,6 +36,7 @@ import blacksoftware.venda.dao.GenericDAO;
 import blacksoftware.venda.dao.ProdutoDAO;
 import blacksoftware.venda.models.ItemPedido;
 import blacksoftware.venda.models.Pedido;
+import blacksoftware.venda.models.Pedido.StatusPedido;
 import blacksoftware.venda.models.Prazo;
 import blacksoftware.venda.service.PedidoService;
 
@@ -101,11 +102,24 @@ public class PedidoActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_salvar_pedido) {
-			salvarAction();
+			if (pedido.getStatusPedido() == StatusPedido.SINCRONIZADO) {
+				String msg = "Voce nao pode editar um pedido sincronizado";
+				Toast.makeText(this, msg , Toast.LENGTH_LONG).show();
+			} else if (pedido.getStatusPedido() == StatusPedido.NOVO) {
+				salvarAction();
+			}
 			return true;
 		} else if (id == R.id.action_clientes) {
 			Intent intent = new Intent(this, ClienteActivity.class);
 			startActivity(intent);
+		} else if (id == R.id.action_cancelar_pedido) {
+			if (pedido.getStatusPedido() == StatusPedido.SINCRONIZADO) {
+				String msg = "Voce nao pode cancelar um pedido sincronizado";
+				Toast.makeText(this, msg , Toast.LENGTH_LONG).show();
+			} else if (pedido.getStatusPedido() == StatusPedido.NOVO) {
+				pedido.setStatusPedido(StatusPedido.CANCELADO);
+				salvarAction();
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -137,6 +151,10 @@ public class PedidoActivity extends Activity {
 		pedidoAdapter.setItens(itensPedidoList);
 		itensPedidoView.setAdapter(pedidoAdapter);
 		total.setText(pedido.getTotal() + "");
+		if (pedido != null && pedido.getPrazo() != null) {
+			ArrayAdapter<Prazo> adapter = (ArrayAdapter<Prazo>) alterarPrazos.getAdapter();
+			alterarPrazos.setSelection(adapter.getPosition(pedido.getPrazo()));
+		}
 	}
 	
 	private void initCheckPedidos() {

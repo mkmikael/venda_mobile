@@ -36,7 +36,9 @@ public class PedidoService {
 		daoPedido.save(pedido);
 		for (ItemPedido itemPedido : pedido.getItensPedido()) {
 			if (itemPedido.getQuantidade() > 0) {
-				daoItemPedido.save(itemPedido);
+				if (!itemPedido.getPedido().isSincronizado()) {
+					daoItemPedido.save(itemPedido);
+				}
 				Log.i("PedidoService.saveItensPedido", "salvando item pedido:"  + itemPedido);
 			} else {
 				Log.i("PedidoService.saveItensPedido", "o item pedido nao foi salvo:"  + itemPedido);
@@ -65,4 +67,5 @@ public class PedidoService {
 		}
 		return itemPedidoList;
 	}
+	
 }

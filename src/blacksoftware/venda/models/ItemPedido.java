@@ -139,7 +139,17 @@ public class ItemPedido implements Serializable {
 		return total;
 	}
 	
-
+	public BigDecimal getPrecoPraticado() {
+		try {
+			BigDecimal taxa = getDesconto().divide( new BigDecimal(100) );
+			return getUnidade().getValor()
+					.multiply( BigDecimal.ONE.subtract( taxa ) )
+					.divide(BigDecimal.ONE , 2 , RoundingMode.UP);
+		} catch (Exception e) {
+			return BigDecimal.ZERO;
+		}
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

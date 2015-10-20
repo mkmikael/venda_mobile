@@ -1,6 +1,7 @@
 package blacksoftware.venda.activities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -34,6 +35,7 @@ import blacksoftware.venda.dao.ClienteDAO;
 import blacksoftware.venda.dao.PedidoDAO;
 import blacksoftware.venda.models.Cliente;
 import blacksoftware.venda.models.Pedido;
+import blacksoftware.venda.models.Pedido.StatusPedido;
 
 public class ClienteActivity extends Activity {
 
@@ -145,7 +147,15 @@ public class ClienteActivity extends Activity {
 			// TODO - Criar tabela pedidos
 			// TODO - Usar dismiss() AlertDialog
 			itemSelectedListener.onItemClick(adapter, view, position, id);
-			final List<Pedido> pedidos = new ArrayList<Pedido>(clienteAtual.getPedidos());
+			final ArrayList<Pedido> pedidos = new ArrayList<Pedido>(clienteAtual.getPedidos());
+			Collections.reverse(pedidos);
+			List<Pedido> toRemove = new ArrayList<Pedido>();
+			for (Pedido pedido : pedidos) {
+				if (pedido.getStatusPedido() == StatusPedido.CANCELADO) {
+					toRemove.add(pedido);
+				}
+			}
+			pedidos.removeAll(toRemove);
 			if (pedidos.isEmpty()) {
 				Toast.makeText(ClienteActivity.this, "O cliente nao possui pedidos armazenados", Toast.LENGTH_SHORT).show();
 			} else {
@@ -153,7 +163,7 @@ public class ClienteActivity extends Activity {
 				final Intent intent = new Intent(ClienteActivity.this, PedidoActivity.class);
 				intent.putExtra("pedido", pedidos.get(0));
 				new AlertDialog.Builder(ClienteActivity.this)
-						.setTitle("Dt Ped - Dt Fatur - Hora Pedido - Valor")
+						.setTitle("Dt Ped - Dt Fatur - Hora Pedido - Valor - Status")
 						.setNegativeButton("Fechar", null)
 						.setPositiveButton("Selecionar", new OnClickListener() {
 							public void onClick(DialogInterface di, int index) {

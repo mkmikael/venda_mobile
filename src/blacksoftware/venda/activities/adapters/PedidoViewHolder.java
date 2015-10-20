@@ -29,6 +29,7 @@ public class PedidoViewHolder {
 	private EditText bonificacaoView;
 	private EditText descontoView;
 	private TextView precoUnitario;
+	private TextView precoPraticado;
 	private TextView subtotal;
 	
 	private ItemPedido itemPedido;
@@ -42,6 +43,7 @@ public class PedidoViewHolder {
 		estoque = (TextView) view.findViewById(R.id.estoque);
 		precoView = (TextView) view.findViewById(R.id.preco);
 		precoUnitario = (TextView) view.findViewById(R.id.precoUnitario);
+		precoPraticado = (TextView) view.findViewById(R.id.precoPraticado);
 		subtotal = (TextView) view.findViewById(R.id.subtotal);
 		initTipo();
 		initDesconto();
@@ -157,6 +159,7 @@ public class PedidoViewHolder {
 	public void calcularItemPedido() {
 		itemPedidoChangedListener.itemPedidoChanged(itemPedido);
 		precoUnitario.setText(itemPedido.getPrecoNegociado() + "");
+		precoPraticado.setText(itemPedido.getPrecoPraticado() + "");
 		subtotal.setText(itemPedido.getTotal() + "");
 	}
 }

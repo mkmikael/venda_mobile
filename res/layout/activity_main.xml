@@ -38,6 +38,13 @@
             android:layout_weight="5"
             android:onClick="enviar"
             android:text="Enviar" />
+        
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:onClick="irSettings"
+            android:text="Funcoes Tecnicas" />
     </LinearLayout>
 
     <AnalogClock

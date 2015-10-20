@@ -12,8 +12,13 @@
         android:id="@+id/action_salvar_pedido"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
-        android:title="Salvar"/>
+        android:title="Salvar"/>    
     
+    <item
+        android:id="@+id/action_cancelar_pedido"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="Cancelar"/>    
     
     <item
         android:id="@+id/action_clientes"

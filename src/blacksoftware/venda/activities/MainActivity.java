@@ -1,6 +1,7 @@
 package blacksoftware.venda.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -36,8 +37,10 @@ public class MainActivity extends Activity {
 	}
 	
 	public void atualizar(View view) {
-		RestfulService restService = new RestfulService(this);
+		ProgressDialog progressDialog = ProgressDialog.show(this, "Aguarde...", "Sincronizando com o servidor");
+		RestfulService restService = new RestfulService(this, progressDialog);
 		restService.load();
+		//progressDialog.dismiss();
 	}
 	
 	public void enviar(View view) {
@@ -50,4 +53,8 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 	
+	public void irSettings(View view) {
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+	}
 }

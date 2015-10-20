@@ -18,7 +18,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName="pedido")
 public class Pedido implements Serializable {
 
-	public enum StatusPedido { NOVO, SINCRONIZADO }
+	public enum StatusPedido { NOVO, SINCRONIZADO, CANCELADO }
 	
 	private static final long serialVersionUID = -925355088132929355L;
 	@DatabaseField(generatedId=true)
@@ -55,6 +55,10 @@ public class Pedido implements Serializable {
 		this.total = total;
 	}
 
+	public boolean isSincronizado() {
+		return statusPedido == StatusPedido.SINCRONIZADO;
+	}
+	
 	public Integer getId() {
 		return id;
 	}
@@ -181,6 +185,6 @@ public class Pedido implements Serializable {
 		String dateFatu = new SimpleDateFormat("dd/MM/yyyy").format(this.getDataDeFaturamento());
 		String hora = new SimpleDateFormat("HH:mm").format(this.getDataCriacao());
 		String valor = NumberFormat.getCurrencyInstance().format(this.getTotal());
-		return dateCriacao + " - " + dateFatu + " - " + hora + " - " + valor;
+		return dateCriacao + " - " + dateFatu + " - " + hora + " - " + valor + " - " + statusPedido;
 	}
 }

@@ -38,8 +38,12 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="blacksoftware.venda.activities.CobrancaActivity"
+            android:name=".activities.CobrancaActivity"
             android:label="@string/title_activity_cobranca" >
+        </activity>
+        <activity
+            android:name="blacksoftware.venda.activities.SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

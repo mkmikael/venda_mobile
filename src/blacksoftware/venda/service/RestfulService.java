@@ -1,5 +1,6 @@
 package blacksoftware.venda.service;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,26 +23,38 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.j256.ormlite.dao.Dao;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 import blacksoftware.venda.config.DatabaseOrm;
 import blacksoftware.venda.models.Cliente;
 import blacksoftware.venda.models.ItemPedido;
 import blacksoftware.venda.models.Pedido;
+import blacksoftware.venda.models.Pedido.StatusPedido;
 import blacksoftware.venda.models.Prazo;
 import blacksoftware.venda.models.Produto;
+import blacksoftware.venda.models.Setting;
 import blacksoftware.venda.models.Unidade;
 
 public class RestfulService {
 
 	private DatabaseOrm db;
 	private RequestQueue requestQueue;
-	private String host = "192.168.100.9";
-	private String port = "8080";
+	private String host;
+	private String port;
+	private ProgressDialog progressDialog;
+	private boolean[] end = new boolean[] { false, false, false };
 	
-	public RestfulService(Context context) {
+	public RestfulService(Context context, ProgressDialog progressDialog) {
+		host = Setting.defaultSetting(context).getHost();
+		port = Setting.defaultSetting(context).getPorta();
 		db = new DatabaseOrm(context);
 		requestQueue = Volley.newRequestQueue(context);
+		this.progressDialog = progressDialog;
+	}
+	
+	public RestfulService(Context context) {
+		this(context, null);
 	}
 
 	public void load() {
@@ -49,6 +62,13 @@ public class RestfulService {
 		loadPrazos();
 		loadClientes();
 		requestQueue.start();
+	}
+	
+	private void closeProgressDialog(int i) {
+		end[i] = true;
+		if (end[0] && end[1] && end[2]) {
+			progressDialog.dismiss();
+		}
 	}
 	
 	public void enviarPedidos() {
@@ -93,12 +113,16 @@ public class RestfulService {
 							List<Pedido> pedidoList = dao.queryForAll();
 							JsonArray pedidosJA = new JsonArray();
 							for (Pedido pedido : pedidoList) {
+								if (pedido.getStatusPedido() == StatusPedido.SINCRONIZADO) 
+									continue;
+								
 								JsonObject pedidoJO = new JsonObject();
 								pedidosJA.add(pedidoJO);
 								
+								SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyHHmmss");
 								pedidoJO.addProperty("id", pedido.getId());
-								pedidoJO.addProperty("dataCriacao", pedido.getDataCriacao().toString());
-								pedidoJO.addProperty("dataDeFaturamento", pedido.getDataDeFaturamento().toString());
+								pedidoJO.addProperty("dataCriacao", sdf.format( pedido.getDataCriacao() ) );
+								pedidoJO.addProperty("dataDeFaturamento", sdf.format( pedido.getDataDeFaturamento() ) );
 								pedidoJO.addProperty("cliente", pedido.getCliente().getId());
 								pedidoJO.addProperty("total", pedido.getTotal());
 								pedidoJO.addProperty("prazo", pedido.getPrazo().getId());
@@ -113,6 +137,8 @@ public class RestfulService {
 									itemJO.addProperty("quantidade", item.getQuantidade());
 									itemJO.addProperty("total", item.getTotal());
 									itemJO.addProperty("unidade", item.getUnidade().getTipo());
+									itemJO.addProperty("valor", item.getUnidade().getValor());
+									itemJO.addProperty("valorMinimo", item.getUnidade().getValorMinimo());
 									itemJO.addProperty("produto", item.getProduto().getId());
 									itensJA.add(itemJO);
 								}
@@ -151,12 +177,14 @@ public class RestfulService {
 				} catch (Exception e) {
 					System.out.println(e);
 				}
+				closeProgressDialog(0);
 			}
 		}, 
 				new ErrorListener() {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				Log.e("Erro conection", error.getMessage());
+				closeProgressDialog(0);
 			}
 		});
 		
@@ -190,12 +218,14 @@ public class RestfulService {
 					} catch (Exception e) {
 						Log.e("RestService.loadProdutos", "erro", e);
 					}
+					closeProgressDialog(1);
 				}
 			}, 
 			new ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					Log.e("Erro conection", error.getMessage());
+					closeProgressDialog(1);
 				}
 			});
 		
@@ -218,16 +248,21 @@ public class RestfulService {
 							else
 								dao.create(cliente);
 							Log.i("RestService.loadClientes", cliente.toString());
+							if (progressDialog != null) {
+								progressDialog.dismiss();
+							}
 						}
 					} catch (Exception e) {
 						System.out.println(e);
 					}
+					closeProgressDialog(2);
 				}
 			}, 
 			new ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					Log.e("Erro conection", error.getMessage());
+					closeProgressDialog(2);
 				}
 			});
 		
